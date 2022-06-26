@@ -26,7 +26,6 @@ const handlerDataTime = async (date, time, userId) => {
         }
 
 
-
         const checkDate = await Reservation.findOne({where: {userId: userId, date: date}})
         const checkTime = await Reservation.findOne({where: {userId: userId, time: time}})
 

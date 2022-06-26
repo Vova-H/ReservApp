@@ -1,24 +1,22 @@
-import {Reservation, User} from "../models/models.js";
+import AdminService from "../services/adminService.js";
 
 
 class AdminController {
-    async getAllUsers(req, res) {
-        try {
-            const users = await User.findAll()
-            return res.status(200).json(users)
-        } catch (e) {
-            return res.status(400).json({"message": "getting error"})
-        }
+    adminService;
+
+    constructor(adminService) {
+        this.adminService = adminService
     }
 
-    async getAllReservations(req, res) {
-        try {
-            const actions = await Reservation.findAll()
-            return res.status(200).json(actions)
-        } catch (e) {
-            return res.status(400).json({"message": "getting error"})
-        }
+    async getAllUsers() {
+        return this.adminService.getAllUsers()
+    }
+
+    async getAllReservations() {
+        return this.adminService.getAllReservations()
     }
 }
 
-export default new AdminController()
+const adminController = new AdminController(new AdminService())
+
+export default adminController

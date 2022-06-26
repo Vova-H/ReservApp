@@ -2,54 +2,42 @@ import jsonwebtoken from "jsonwebtoken";
 import secret from "../config.js";
 import {Reservation, User} from "../models/models.js";
 import handlerDataTime from "../handlers/handlerDataTime.js";
+import ReservationService from "../services/reservationService.js";
+import handlerGetToken from "../handlers/handlerGetToken.js";
 
 class ReservationController {
+    reservationService;
 
-    async index(req, res) {
-        try {
-            const token = req.headers.authorization.split(" ")[1]
-            const {id} = jsonwebtoken.verify(token, secret)
-            const reservations = await Reservation.findAll({where: {userId: id}})
-            return res.status(200).json(reservations)
-        } catch (e) {
-            console.log(e)
-            return res.status(400).json({"message": "something wrong"})
-        }
+    constructor(reservationService) {
+        this.reservationService = reservationService
+    }
+
+    async index(req) {
+        const {id} = jsonwebtoken.verify(handlerGetToken(req), secret)
+        return this.reservationService.index(id)
+    }
+
+    async show(req) {
+        const {id} = jsonwebtoken.verify(handlerGetToken(req), secret)
+        const actionId = req.params.id
+        return this.reservationService.show(id, actionId)
     }
 
     async create(req, res) {
-        try {
-            const token = req.headers.authorization.split(" ")[1]
-            const {id} = await jsonwebtoken.verify(token, secret)
-            const user = await User.findOne({where: {id: id}})
-            const {date, time, action} = await req.body
-
-            const result = await handlerDataTime(date, time, id)
-            if (result.length !== 0) {
-                return res.status(400).json({'errors': result})
-            }
-
-            const reservation = await Reservation.create({
-                date,
-                time,
-                action,
-                userId: id,
-                client: [user.name, user.surname]
-            })
-            await reservation.save()
-            return res.json({"message": "Резервация успешна"})
-
-        } catch (e) {
-            console.log(e)
-            return res.status(400).json({"message": "reservation failed"})
+        const {id} = await jsonwebtoken.verify(handlerGetToken(req), secret)
+        const user = await User.findOne({where: {id: id}})
+        const {date, time, action} = await req.body
+        const result = await handlerDataTime(date, time, id)
+        if (result.length !== 0) {
+            return res.status(400).json({'errors': result})
         }
+        return this.reservationService.create(id, user, date, time, action)
     }
 
     async update(req, res) {
         try {
             const {date, time, action} = await req.body
-            const token = req.headers.authorization.split(" ")[1]
-            const {id} = await jsonwebtoken.verify(token, secret)
+            const {id} = await jsonwebtoken.verify(handlerGetToken(req), secret)
             const idParam = req.params.id
             const reservation = await Reservation.findOne({
                 where: {
@@ -57,7 +45,6 @@ class ReservationController {
                     userId: id
                 }
             })
-            console.log(reservation)
             if (reservation === null) {
                 return res.json({"message": "Запись не найдена"})
             }
@@ -82,8 +69,7 @@ class ReservationController {
 
     async delete(req, res) {
         try {
-            const token = req.headers.authorization.split(" ")[1]
-            const {id} = await jsonwebtoken.verify(token, secret)
+            const {id} = await jsonwebtoken.verify(handlerGetToken(req), secret)
             const idParam = req.params.id
             const reservation = await Reservation.findOne({where: {id: idParam, userId: id}})
             if (reservation === null) {
@@ -98,4 +84,6 @@ class ReservationController {
     }
 }
 
-export default new ReservationController()
+const reservationController = new ReservationController(new ReservationService())
+
+export default reservationController
