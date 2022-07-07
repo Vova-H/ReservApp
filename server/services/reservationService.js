@@ -35,7 +35,7 @@ export default class ReservationService {
             }
         })
         if (reservation === null) {
-            return {"message": "Запись не найдена"}
+            return {"message": "Record not found"}
         }
         const result = await handlerDataTime(date, time, id)
 
@@ -48,16 +48,16 @@ export default class ReservationService {
                 userId: id
             }
         })
-        return {"message": "Ваша запись обновленна"}
+        return {"message": "Your entry has been updated"}
     }
 
     async delete(id, idParam) {
         const reservation = await Reservation.findOne({where: {id: idParam, userId: id}})
         if (reservation === null) {
-            return {"message": "Запись не найдена"}
+            return {"message": "Record not found"}
         }
         await Reservation.destroy({where: {id: idParam, userId: id}})
-        return {"message": "Ваша запись успешно удалена"}
+        return {"message": "Your entry has been successfully deleted"}
     }
 }
 

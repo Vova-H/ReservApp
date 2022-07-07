@@ -1,11 +1,12 @@
 import jsonwebtoken from "jsonwebtoken";
 import secret from "../config.js";
+import handlerGetToken from "../handlers/handlerGetToken.js";
 
 export default function (roles) {
 
     return function (req, res, next) {
         try {
-            const token = req.headers.authorization.split(" ")[1]
+            const token = handlerGetToken(req)
             const {roles: userRoles} = jsonwebtoken.verify(token, secret)
             let hasRole = false
             if (typeof userRoles === "string")
@@ -18,12 +19,12 @@ export default function (roles) {
                 }
             })
             if (!hasRole) {
-                return res.status(403).json({"message": "Отказано в доступе"})
+                return res.status(403).json({"message": "Access denied"})
             }
             next()
         } catch (e) {
             console.log(e)
-            return res.status(403).json({"message": "Отказано в доступе"})
+            return res.status(403).json({"message": "Access denied"})
         }
     }
 }
