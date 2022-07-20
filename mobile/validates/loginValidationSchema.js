@@ -6,7 +6,7 @@ const loginValidationSchema = yup.object().shape({
         .email("Please enter valid email")
         .required('Email Address is Required'),
     password: yup.string()
-        .min(8, ({min}) => `Password must be at least ${min} characters`)
+        .min(4, ({min}) => `Password must be at least ${min} characters`)
         .max(15, ({max}) => `Password must be max ${max} characters`)
         .required('Password is required'),
 

@@ -12,8 +12,11 @@ import MyButton from "../components/MyButton";
 import screenStyle from "../styles/screenStyle";
 import {Formik} from "formik";
 import registrationValidationSchema from "../validates/registrationValidationSchema";
+import {useCreateRegistrationData} from "../http/auth/useAuthData";
 
 const RegisterScreen = ({navigation}) => {
+
+    const {mutate: registerUser} = useCreateRegistrationData()
 
     return (
         <View style={styles.container}>
@@ -29,8 +32,9 @@ const RegisterScreen = ({navigation}) => {
                                 initialValues={{name: '', surname: '', email: '', password: ''}}
                                 validationSchema={registrationValidationSchema}
                                 onSubmit={(values, actions) => {
-                                    actions.resetForm()
+                                    registerUser(values)
                                     console.log(values)
+                                    actions.resetForm()
                                 }}
                             >
                                 {(props) => (

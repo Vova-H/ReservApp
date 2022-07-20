@@ -12,9 +12,12 @@ import MyButton from "../components/MyButton";
 import {Formik} from "formik";
 import loginValidationSchema from "../validates/loginValidationSchema";
 import screenStyle from "../styles/screenStyle";
+import {useLogin} from "../http/auth/useAuthData";
 
 
 const LoginScreen = ({navigation}) => {
+
+    const {mutate: loginUser} = useLogin()
 
     return (
         <View style={styles.container}>
@@ -29,8 +32,10 @@ const LoginScreen = ({navigation}) => {
                             initialValues={{email: '', password: ''}}
                             validationSchema={loginValidationSchema}
                             onSubmit={(values, actions) => {
-                                actions.resetForm()
+                                loginUser(values)
+                                navigation.navigate("MyReservations")
                                 console.log(values)
+                                actions.resetForm()
                             }}
                         >
                             {(props) => (
