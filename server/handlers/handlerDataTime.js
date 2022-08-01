@@ -26,8 +26,8 @@ const handlerDataTime = async (date, time, userId) => {
         }
 
 
-        const checkDate = await Reservation.findOne({where: {userId: userId, date: date}})
-        const checkTime = await Reservation.findOne({where: {userId: userId, time: time}})
+        const checkDate = await Reservation.findOne({where: {date: date}})
+        const checkTime = await Reservation.findOne({where: {time: time}})
 
         if (checkDate && checkTime) {
             err.push({"message": "There is already a record for the current time"})

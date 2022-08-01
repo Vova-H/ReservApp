@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
     ImageBackground,
     Keyboard,
@@ -8,22 +8,31 @@ import {
     TouchableWithoutFeedback,
     View
 } from "react-native";
-import MyButton from "../components/MyButton";
+import MyButton from "../components/UI/MyButton";
 import {Formik} from "formik";
 import loginValidationSchema from "../validates/loginValidationSchema";
 import screenStyle from "../styles/screenStyle";
 import {useLogin} from "../http/auth/useAuthData";
+import {Button} from "@react-native-material/core";
 
 
 const LoginScreen = ({navigation}) => {
 
-    const {mutate: loginUser} = useLogin()
+    const {mutate: loginUser, isSuccess, data} = useLogin()
+
+    useEffect(() => {
+        if (isSuccess) {
+            localStorage.setItem('token', data)
+            navigation.navigate('MyReservations')
+        }
+    }, [isSuccess])
+
 
     return (
         <View style={styles.container}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <ImageBackground
-                    source={{uri: 'https://media.istockphoto.com/vectors/medicine-and-science-research-background-vector-id516083365'}}
+                    source={require('../assets/background.jpg')}
                     resizeMode="cover"
                     style={styles.background}
                 >
@@ -33,8 +42,6 @@ const LoginScreen = ({navigation}) => {
                             validationSchema={loginValidationSchema}
                             onSubmit={(values, actions) => {
                                 loginUser(values)
-                                navigation.navigate("MyReservations")
-                                console.log(values)
                                 actions.resetForm()
                             }}
                         >
@@ -57,13 +64,20 @@ const LoginScreen = ({navigation}) => {
                                     ></TextInput>
                                     <Text
                                         style={styles.textError}>{props.touched.password && props.errors.password}</Text>
-                                    <MyButton title={"Login"} mgb={30} mgt={20} onPress={() => {
-                                        props.handleSubmit()
-                                    }}/>
+                                    <Button title={"Login"}
+                                            color={'#000'}
+                                            paddingVertical={7}
+                                            titleStyle={{fontSize: 18}}
+                                            onPress={() => {
+                                                props.handleSubmit()
+                                            }}/>
                                     <View style={styles.wrapperGoTo}>
                                         <Text style={[styles.label, {fontSize: 24}]}>Don't have an account yet?</Text>
-                                        <MyButton title={" Go To Register"} mgb={20} style={styles.btn}
-                                                  onPress={() => navigation.navigate('Register')}/>
+                                        <Button title={" Go To Register"}
+                                                color={'#000'}
+                                                paddingVertical={7}
+                                                titleStyle={{fontSize: 18}}
+                                                onPress={() => navigation.navigate('Register')}/>
                                     </View>
                                 </View>
                             )}

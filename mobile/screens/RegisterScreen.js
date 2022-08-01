@@ -8,21 +8,21 @@ import {
     TouchableWithoutFeedback,
     View
 } from "react-native";
-import MyButton from "../components/MyButton";
 import screenStyle from "../styles/screenStyle";
 import {Formik} from "formik";
 import registrationValidationSchema from "../validates/registrationValidationSchema";
-import {useCreateRegistrationData} from "../http/auth/useAuthData";
+import {useRegistration} from "../http/auth/useAuthData";
+import {Button} from "@react-native-material/core";
 
 const RegisterScreen = ({navigation}) => {
 
-    const {mutate: registerUser} = useCreateRegistrationData()
+    const {mutate: registerUser} = useRegistration()
 
     return (
         <View style={styles.container}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <ImageBackground
-                    source={{uri: 'https://media.istockphoto.com/vectors/medicine-and-science-research-background-vector-id516083365'}}
+                    source={require('../assets/background.jpg')}
                     resizeMode="cover"
                     style={styles.background}
                 >
@@ -71,14 +71,21 @@ const RegisterScreen = ({navigation}) => {
                                         ></TextInput>
                                         <Text
                                             style={styles.textError}>{props.touched.password && props.errors.password}</Text>
-                                        <MyButton title={"Register"} mgb={30} mgt={20} onPress={() => {
-                                            props.handleSubmit()
-                                        }}/>
+                                        <Button title={"Register"}
+                                                color={'#000'}
+                                                paddingVertical={7}
+                                                titleStyle={{fontSize: 18}}
+                                                onPress={() => {
+                                                    props.handleSubmit()
+                                                }}/>
                                         <View style={styles.wrapperGoTo}>
                                             <Text style={[styles.label, {fontSize: 24}]}>Already have an account
                                                 ?</Text>
-                                            <MyButton title={"Go To Login"} mgb={20} style={styles.btn}
-                                                      onPress={() => navigation.navigate('Login')}/>
+                                            <Button title={"Go To Login"}
+                                                    color={'#000'}
+                                                    paddingVertical={7}
+                                                    titleStyle={{fontSize: 18}}
+                                                    onPress={() => navigation.navigate('Login')}/>
                                         </View>
                                     </View>
                                 )}

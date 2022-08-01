@@ -1,26 +1,35 @@
 import React from 'react';
 import axios from "axios";
-import {useMutation, useQuery} from "react-query";
 
 
-const Reservations = () => {
-    return axios.get('http://10.0.2.2:5000/api/reservation', {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`
+export const Reservations = async ({navigation}) => {
+    try {
+        const reservationsData = await axios.get('http://10.0.2.2:5000/api/reservation', {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        return reservationsData.data
+    } catch (e) {
+        console.log(e.response.status)
+        switch (e.response.status) {
+            case 404 :
+                navigation.navigate('Login')
+                alert('Page not found')
+                break;
+            case 403:
+                navigation.navigate('Login')
+                alert('Access forbidden')
+                break;
         }
-    })
+        navigation.navigate('Login')
+    }
 }
 
-const createReservation = () => {
-    return axios.post('http://10.0.2.2:5000/api/reservation')
-}
+// export const useReservations = () => useQuery('reservations', Reservations)
 
-export const useReservations = () => {
-    return  useQuery('reservations', Reservations)
-}
 
-export const useCreateReservationData = () => {
-    return useMutation(createReservation)
-}
 
 
