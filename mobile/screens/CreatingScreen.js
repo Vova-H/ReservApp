@@ -12,9 +12,8 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 const CreatingScreen = observer(({navigation}) => {
 
 
-    const time = (new Date().getHours() + ":" + new Date().getMinutes()).toString()
-    console.log(time)
-    console.log(typeof time)
+    const time = (new Date().getHours() + ":" + new Date().getMinutes())
+
 
     return (
         <Flex fill>
@@ -88,8 +87,13 @@ export const MyForm = props => {
     };
 
     const handleTimeConfirm = time => {
-        setFieldValue('time', moment(time).format('LT'))
-        hideDatePicker();
+        let hours = time.getHours()
+        let minutes = time.getMinutes()
+        if (minutes === 0) {
+            minutes = "00"
+        }
+        setFieldValue('time', (hours + ":" + minutes).toString())
+        hideTimePicker()
     };
 
     return (
@@ -102,6 +106,7 @@ export const MyForm = props => {
                 onConfirm={handleDateConfirm}
                 onCancel={hideDatePicker}
                 date={moment(values.date).toDate()}
+                minimumDate={new Date(Date.now())}
             />
             <DateTimePickerModal
                 isVisible={isTimePickerVisibility}
@@ -109,6 +114,7 @@ export const MyForm = props => {
                 onConfirm={handleTimeConfirm}
                 onCancel={hideTimePicker}
                 data={values.time}
+                minuteInterval={15}
             />
             <Button title="Create" onPress={handleSubmit}/>
         </Flex>
