@@ -25,7 +25,13 @@ export default class AuthServices {
         if (!encryptPassword) {
             return {"message": "Wrong password"}
         }
-        return generateAccessToken(user.id, user.roles)
+        return [generateAccessToken(user.id, user.roles),
+            {
+                name: user.name,
+                surname: user.surname,
+                email: user.email,
+                roles: user.roles
+            }]
     }
 
 }

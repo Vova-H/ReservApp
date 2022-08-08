@@ -5,6 +5,8 @@ import RegisterScreen from "./screens/RegisterScreen";
 import LoginScreen from "./screens/LoginScreen";
 import 'localstorage-polyfill';
 import MyReservations from "./screens/MyReservations";
+import {Button} from "@react-native-material/core";
+import CreatingScreen from "./screens/CreatingScreen";
 
 
 export default function App() {
@@ -19,6 +21,7 @@ export default function App() {
                     <Stack.Screen name="Login" component={LoginScreen}/>
                     <Stack.Screen name="Register" component={RegisterScreen}/>
                     <Stack.Screen name="MyReservations" component={MyReservations}/>
+                    <Stack.Screen name="Creating" component={CreatingScreen}/>
                 </Stack.Navigator>
             </NavigationContainer>
         </QueryClientProvider>

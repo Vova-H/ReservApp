@@ -11,12 +11,10 @@ import {
 import screenStyle from "../styles/screenStyle";
 import {Formik} from "formik";
 import registrationValidationSchema from "../validates/registrationValidationSchema";
-import {useRegistration} from "../http/auth/useAuthData";
 import {Button} from "@react-native-material/core";
+import authStore from "../storage/authStore";
 
 const RegisterScreen = ({navigation}) => {
-
-    const {mutate: registerUser} = useRegistration()
 
     return (
         <View style={styles.container}>
@@ -31,10 +29,10 @@ const RegisterScreen = ({navigation}) => {
                             <Formik
                                 initialValues={{name: '', surname: '', email: '', password: ''}}
                                 validationSchema={registrationValidationSchema}
-                                onSubmit={(values, actions) => {
-                                    registerUser(values)
-                                    console.log(values)
+                                onSubmit={async (values, actions) => {
+                                    await authStore.registration(values)
                                     actions.resetForm()
+                                    navigation.navigate('Login')
                                 }}
                             >
                                 {(props) => (

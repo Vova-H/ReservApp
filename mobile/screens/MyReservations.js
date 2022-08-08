@@ -1,135 +1,81 @@
-import React from 'react';
-import {FlatList, Text, TouchableHighlight, View} from "react-native";
-import axios from "axios";
-import {useQuery} from "react-query";
+import React, {useEffect} from 'react';
+import {FlatList, StatusBar, Text} from "react-native";
 import {AppBar, Button, Flex} from "@react-native-material/core";
+import {observer} from "mobx-react";
+import reservationStore from "../storage/reservationStore";
+import authStore from "../storage/authStore";
 
 
-const MyReservations = ({navigation}) => {
+const MyReservations = observer(({navigation}) => {
 
-    const array = [
-        // {
-        //     id: 1,
-        //     action: 'asd',
-        //     date: "12 21 12",
-        //     time: "11:00"
-        // },
-        // {
-        //     id: 2,
-        //     action: 'asd',
-        //     date: "12 21 12",
-        //     time: "11:00"
-        // },
-        // {
-        //     id: 3,
-        //     action: 'asd',
-        //     date: "12 21 12",
-        //     time: "11:00"
-        // },
-        // {
-        //     id: 4,
-        //     action: 'asd',
-        //     date: "12 21 12",
-        //     time: "11:00"
-        // },
-        // {
-        //     id: 5,
-        //     action: 'asd',
-        //     date: "12 21 12",
-        //     time: "11:00"
-        // },
-        // {
-        //     id: 6,
-        //     action: 'asd',
-        //     date: "12 21 12",
-        //     time: "11:00"
-        // },
-        // {
-        //     id: 7,
-        //     action: 'asd',
-        //     date: "12 21 12",
-        //     time: "11:00"
-        // },
-        // {
-        //     id: 8,
-        //     action: 'asd',
-        //     date: "12 21 12",
-        //     time: "11:00"
-        // },
-        // {
-        //     id: 9,
-        //     action: 'asd',
-        //     date: "12 21 12",
-        //     time: "11:00"
-        // },
-        // {
-        //     id: 10,
-        //     action: 'asd',
-        //     date: "12 21 12",
-        //     time: "11:00"
-        // },
-        // {
-        //     id: 11,
-        //     action: 'asd',
-        //     date: "12 21 12",
-        //     time: "11:00"
-        // }
-    ]
-
-    const fetchReservations = async () => { ///TODO перенести фетч в http
-        try {
-            const reservationsData = await axios.get('http://10.0.2.2:5000/api/reservation', {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
+    useEffect(() => {
+        (async () => {
+            try {
+                await reservationStore.getReservations()
+            } catch (e) {
+                navigation.navigate('Login')
+                switch (e.response.status) {
+                    case 404 :
+                        alert('Page not found')
+                        break;
+                    case 403:
+                        alert('Access forbidden')
+                        break
                 }
-            })
-            return reservationsData.data
-        } catch (e) {
-            switch (e.response.status) {
-                case 404 :
-                    alert('Page not found')
-                    break;
-                case 403:
-                    alert('Access forbidden')
-                    break
             }
-            navigation.navigate('Login')
-        }
-    }
-
-    const {data} = useQuery('reservations', fetchReservations)
+        })()
+    }, [])
 
 
     const renderReservations = ({item}) => (
-        <Flex direction={"row"} items={"center"} justify={"space-between"}
-              style={{marginBottom: 20, marginTop: 20, backgroundColor: "blue"}}>
-            <Flex justify={"center"} style={{backgroundColor: "red"}}>
-                <Text style={{textAlign: "center"}}>{item.time}</Text>
+        <Flex direction={"row"} items={"center"}
+              style={{marginBottom: 20, marginTop: 20, backgroundColor: "#fdc510"}}>
+            <Flex justify={"center"} style={{width: "30%"}}>
+                <Text>{item.time}</Text>
                 <Text>{item.date}</Text>
             </Flex>
-            <Flex direction={"row"}><Text>{item.action}</Text></Flex>
+            <Flex direction={"row"}><Text style={{textTransform: "uppercase"}}>{item.action}</Text></Flex>
         </Flex>
     )
 
     return (
         <Flex fill>
-            <AppBar title='MyReservations'/>
+            <StatusBar hidden/>
+            <AppBar
+                title='MyReservations'
+                subtitle={authStore.client.email}
+                trailing={props =>
+                    <Button
+                        variant="text"
+                        title="Logout"
+                        compact
+                        style={{marginEnd: 4}}
+                        onPress={() => {
+                            authStore.logout()
+                            navigation.navigate("Login")
+                        }}
+                        {...props}
+                    />
+                }
+            />
             <Flex fill items={"center"} justify={"center"}>
                 {
-                    data?.length === 0 ?
+                    reservationStore.reservations.length === 0 ?
                         <Text style={{marginBottom: 20}}> You don't have any reservations </Text> :
-                        data ? <FlatList data={data} renderItem={renderReservations}
-                                         keyExtractor={item => item.id}/> : null
+                        reservationStore.reservations ?
+                            <FlatList data={reservationStore.reservations} renderItem={renderReservations}
+                                      keyExtractor={item => item.id}/> : null
                 }
             </Flex>
             <Flex>
-                <Button title={"Create"}/>
+                <Button title={"Create"}
+                        onPress={() => {
+                            navigation.navigate("Creating")
+                        }}
+                />
             </Flex>
         </Flex>
     );
-};
-
+})
 
 export default MyReservations;

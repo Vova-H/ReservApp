@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
     ImageBackground,
     Keyboard,
@@ -8,24 +8,15 @@ import {
     TouchableWithoutFeedback,
     View
 } from "react-native";
-import MyButton from "../components/UI/MyButton";
 import {Formik} from "formik";
 import loginValidationSchema from "../validates/loginValidationSchema";
 import screenStyle from "../styles/screenStyle";
-import {useLogin} from "../http/auth/useAuthData";
 import {Button} from "@react-native-material/core";
+import {observer} from "mobx-react";
+import authStore from "../storage/authStore";
 
 
-const LoginScreen = ({navigation}) => {
-
-    const {mutate: loginUser, isSuccess, data} = useLogin()
-
-    useEffect(() => {
-        if (isSuccess) {
-            localStorage.setItem('token', data)
-            navigation.navigate('MyReservations')
-        }
-    }, [isSuccess])
+const LoginScreen = observer(({navigation}) => {
 
 
     return (
@@ -40,15 +31,23 @@ const LoginScreen = ({navigation}) => {
                         <Formik
                             initialValues={{email: '', password: ''}}
                             validationSchema={loginValidationSchema}
-                            onSubmit={(values, actions) => {
-                                loginUser(values)
+                            onSubmit={async (values, actions) => {
+                                await authStore.login(values)
+                                    .then(response => {
+                                        if (response[0]) {
+                                            navigation.navigate('MyReservations')
+                                        } else {
+                                            alert(JSON.stringify(response.message))
+                                        }
+                                    })
                                 actions.resetForm()
                             }}
                         >
                             {(props) => (
                                 <View>
                                     <Text style={styles.label}>Email</Text>
-                                    <TextInput style={styles.input} value={props.values.email}
+                                    <TextInput style={styles.input}
+                                               value={props.values.email}
                                                onChangeText={props.handleChange('email')}
                                                keyboardType={"email-address"}
                                                onBlur={props.handleBlur('email')}
@@ -62,8 +61,7 @@ const LoginScreen = ({navigation}) => {
                                                secureTextEntry={true}
                                                onBlur={props.handleBlur('password')}
                                     ></TextInput>
-                                    <Text
-                                        style={styles.textError}>{props.touched.password && props.errors.password}</Text>
+                                    <Text style={styles.textError}>{props.touched.password && props.errors.password}</Text>
                                     <Button title={"Login"}
                                             color={'#000'}
                                             paddingVertical={7}
@@ -87,7 +85,7 @@ const LoginScreen = ({navigation}) => {
             </TouchableWithoutFeedback>
         </View>
     );
-};
+})
 
 const styles = screenStyle
 
