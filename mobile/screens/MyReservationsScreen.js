@@ -6,7 +6,7 @@ import reservationStore from "../storage/reservationStore";
 import authStore from "../storage/authStore";
 
 
-const MyReservations = observer(({navigation}) => {
+const MyReservationsScreen = observer(({navigation}) => {
 
     useEffect(() => {
         (async () => {
@@ -24,17 +24,19 @@ const MyReservations = observer(({navigation}) => {
                 }
             }
         })()
-    }, [])
+    }, [reservationStore.reservations])
 
 
     const renderReservations = ({item}) => (
         <Flex direction={"row"} items={"center"}
-              style={{marginBottom: 20, marginTop: 20, backgroundColor: "#fdc510"}}>
-            <Flex justify={"center"} style={{width: "30%"}}>
+              style={{marginBottom: 20, marginTop: 20, paddingHorizontal: "5%", borderBottomWidth: 1, borderTopWidth:1, backgroundColor:"#dcdcdc"}}>
+            <Flex justify={"center"} style={{paddingRight:"2%" , marginRight: "10%", borderRightWidth:1}}>
                 <Text>{item.time}</Text>
                 <Text>{item.date}</Text>
             </Flex>
-            <Flex direction={"row"}><Text style={{textTransform: "uppercase"}}>{item.action}</Text></Flex>
+            <Flex direction={"row"} wrap={"wrap"}><Text
+                style={{textTransform: "uppercase", width: "80%"}}>{item.action}</Text>
+            </Flex>
         </Flex>
     )
 
@@ -42,7 +44,7 @@ const MyReservations = observer(({navigation}) => {
         <Flex fill>
             <StatusBar hidden/>
             <AppBar
-                title='MyReservations'
+                title='MyReservationsScreen'
                 subtitle={authStore.client.email}
                 trailing={props =>
                     <Button
@@ -78,4 +80,4 @@ const MyReservations = observer(({navigation}) => {
     );
 })
 
-export default MyReservations;
+export default MyReservationsScreen;

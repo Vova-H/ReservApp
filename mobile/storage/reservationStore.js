@@ -24,7 +24,17 @@ class ReservationStore {
     }
 
     async createReservation(reservation) {
-        return null
+        const newReservation = axios.post('http://10.0.2.2:5000/api/reservation', reservation, {
+            headers: {
+                Authorization: `Bearer ${auth.token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        runInAction(() => {
+            this.reservations = [...this.reservations, newReservation]
+        })
+        return newReservation
     }
 }
 

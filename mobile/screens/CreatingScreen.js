@@ -8,12 +8,18 @@ import screenStyle from "../styles/screenStyle";
 import reservationsValidationSchema from "../validates/reservationsValidationSchema";
 import moment from 'moment';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import reservationStore from "../storage/reservationStore";
+import {Picker} from "@react-native-picker/picker";
 
 const CreatingScreen = observer(({navigation}) => {
 
 
-    const time = (new Date().getHours() + ":" + new Date().getMinutes())
-
+    let hours = new Date().getHours()
+    let minutes = new Date().getMinutes().toString()
+    if (minutes.length === 1) {
+        minutes = "0" + minutes.toString()
+    }
+    const time = hours + ":" + minutes
 
     return (
         <Flex fill>
@@ -40,13 +46,27 @@ const CreatingScreen = observer(({navigation}) => {
                 <Formik
                     initialValues={
                         {
-                            date: moment().format('l')
-                            , time: time
+                            date: moment().format('YYYY-MM-DD'),
+                            time: time,
+                            action: "to open sick list"
                         }
                     }
                     validationSchema={reservationsValidationSchema}
                     onSubmit={async (values) => {
-                        console.log(values)
+
+                        await reservationStore.createReservation(values)
+                            .then(response => {
+                                console.log(response.data)
+                                if (response.data.errors) {
+                                    response.data.errors.map((el) => {
+                                        alert(el.message)
+                                    })
+                                } else {
+                                    alert("Your reservation was created successfully")
+                                }
+                            })
+                            .then(navigation.navigate('MyReservations'))
+                            .catch(e => console.log(e))
                     }}
                 >
                     {(props) => (
@@ -74,7 +94,7 @@ export const MyForm = props => {
     };
 
     const handleDateConfirm = date => {
-        setFieldValue('date', moment(date).format('l'))
+        setFieldValue('date', moment(date).format('YYYY-MM-DD'))
         hideDatePicker();
     };
 
@@ -87,25 +107,36 @@ export const MyForm = props => {
     };
 
     const handleTimeConfirm = time => {
-        let hours = time.getHours()
-        let minutes = time.getMinutes()
-        if (minutes === 0) {
-            minutes = "00"
+        time = moment(time).format("LT")
+        if (time.includes("PM")) {
+            const timeArray = time.split(" ")
+            const newTimeArray = timeArray[0].split(":")
+            const hours = parseInt(newTimeArray[0])
+            newTimeArray[0] = hours + 12
+            newTimeArray[0] = newTimeArray[0].toString()
+            time = newTimeArray.join(":")
+            setFieldValue('time', time)
+        } else {
+            time = time.split(" ")
+            setFieldValue('time', time[0])
         }
-        setFieldValue('time', (hours + ":" + minutes).toString())
         hideTimePicker()
     };
 
+    const handleAction = (action) => {
+        setFieldValue('action', action)
+    }
+
     return (
         <Flex>
-            <Text onPress={showDatePicker}>{moment(values.date).format('l')}</Text>
+            <Text onPress={showDatePicker}>{moment(values.date).format('YYYY-MM-DD')}</Text>
             <Text onPress={showTimePicker}>{values.time} </Text>
             <DateTimePickerModal
                 isVisible={isDatePickerVisible}
                 mode="date"
                 onConfirm={handleDateConfirm}
                 onCancel={hideDatePicker}
-                date={moment(values.date).toDate()}
+                data={moment(values.date).format('YYYY-MM-DD')}
                 minimumDate={new Date(Date.now())}
             />
             <DateTimePickerModal
@@ -116,6 +147,18 @@ export const MyForm = props => {
                 data={values.time}
                 minuteInterval={15}
             />
+            <Picker
+                selectedValue={values.action}
+
+                onValueChange={async (itemValue, itemIndex) => {
+                    await handleAction(itemValue)
+                }
+                }>
+                <Picker.Item label="to open sick list" value="to open sick list"/>
+                <Picker.Item label="to get analyses" value="to get analyses"/>
+                <Picker.Item label="to make a declaration" value="to make a declaration"/>
+                <Picker.Item label="to get prescription for painkillers" value="to get prescription for painkillers"/>
+            </Picker>
             <Button title="Create" onPress={handleSubmit}/>
         </Flex>
     )

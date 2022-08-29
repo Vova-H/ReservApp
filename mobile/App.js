@@ -4,7 +4,7 @@ import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import RegisterScreen from "./screens/RegisterScreen";
 import LoginScreen from "./screens/LoginScreen";
 import 'localstorage-polyfill';
-import MyReservations from "./screens/MyReservations";
+import MyReservationsScreen from "./screens/MyReservationsScreen";
 import {Button} from "@react-native-material/core";
 import CreatingScreen from "./screens/CreatingScreen";
 
@@ -20,7 +20,7 @@ export default function App() {
                 <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="LoginScreen">
                     <Stack.Screen name="Login" component={LoginScreen}/>
                     <Stack.Screen name="Register" component={RegisterScreen}/>
-                    <Stack.Screen name="MyReservations" component={MyReservations}/>
+                    <Stack.Screen name="MyReservations" component={MyReservationsScreen}/>
                     <Stack.Screen name="Creating" component={CreatingScreen}/>
                 </Stack.Navigator>
             </NavigationContainer>

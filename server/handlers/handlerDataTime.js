@@ -1,6 +1,6 @@
 import {Reservation} from "../models/models.js";
 
-const handlerDataTime = async (date, time, userId) => {
+const handlerDataTime = async (date, time) => {
     const err = []
     try {
         const reqTime = time.split(':')
