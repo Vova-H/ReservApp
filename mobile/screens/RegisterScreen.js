@@ -14,7 +14,7 @@ import registrationValidationSchema from "../validates/registrationValidationSch
 import {Button} from "@react-native-material/core";
 import authStore from "../storage/authStore";
 
-const RegisterScreen = ({navigation}) => {
+const RegisterScreen = (({navigation}) => {
 
     return (
         <View style={styles.container}>
@@ -94,7 +94,7 @@ const RegisterScreen = ({navigation}) => {
             </TouchableWithoutFeedback>
         </View>
     );
-};
+});
 
 const styles = screenStyle
 

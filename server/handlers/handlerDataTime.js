@@ -24,12 +24,8 @@ const handlerDataTime = async (date, time) => {
         if (onlyDate + onlyTime <= Date.now()) {
             err.push({"message": "you can't record past tense"})
         }
-
-
-        const checkDate = await Reservation.findOne({where: {date: date}})
-        const checkTime = await Reservation.findOne({where: {time: time}})
-
-        if (checkDate && checkTime) {
+        const dateTimeChecking = await Reservation.findOne({where: {date: date, time:time}})
+        if (dateTimeChecking) {
             err.push({"message": "There is already a record for the current time"})
         }
 

@@ -5,8 +5,10 @@ import RegisterScreen from "./screens/RegisterScreen";
 import LoginScreen from "./screens/LoginScreen";
 import 'localstorage-polyfill';
 import MyReservationsScreen from "./screens/MyReservationsScreen";
-import {Button} from "@react-native-material/core";
+import {IconComponentProvider} from "@react-native-material/core";
 import CreatingScreen from "./screens/CreatingScreen";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import EditingScreen from "./screens/EditingScreen";
 
 
 export default function App() {
@@ -16,14 +18,17 @@ export default function App() {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <NavigationContainer>
-                <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="LoginScreen">
-                    <Stack.Screen name="Login" component={LoginScreen}/>
-                    <Stack.Screen name="Register" component={RegisterScreen}/>
-                    <Stack.Screen name="MyReservations" component={MyReservationsScreen}/>
-                    <Stack.Screen name="Creating" component={CreatingScreen}/>
-                </Stack.Navigator>
-            </NavigationContainer>
+            <IconComponentProvider IconComponent={MaterialCommunityIcons}>
+                <NavigationContainer>
+                    <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="LoginScreen">
+                        <Stack.Screen name="Login" component={LoginScreen}/>
+                        <Stack.Screen name="Register" component={RegisterScreen}/>
+                        <Stack.Screen name="MyReservations" component={MyReservationsScreen}/>
+                        <Stack.Screen name="Creating" component={CreatingScreen}/>
+                        <Stack.Screen name="Editing" component={EditingScreen}/>
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </IconComponentProvider>
         </QueryClientProvider>
     );
 }
