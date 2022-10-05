@@ -19,7 +19,6 @@ class ReservationStore {
                 'Content-Type': 'application/json',
             }
         })
-
         await runInAction(() => {
             this.reservations = [...reservationsData.data]
         })
@@ -49,11 +48,6 @@ class ReservationStore {
             }
         })
         await runInAction(() => {
-            // const newReservations = this.reservations.map((el) => {
-            //     if (el.id === id) {
-            //         return {...el, reservation}
-            //     }
-            // })
             this.reservations = [...this.reservations, updatedReservation]
         })
         return updatedReservation

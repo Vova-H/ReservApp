@@ -9,6 +9,8 @@ import {useNavigation} from "@react-navigation/native";
 const ReservationItem = observer(({item}) => {
     const navigation = useNavigation()
 
+    const {isValidStatus} = item
+    console.log(isValidStatus)
 
     return (
         <Flex direction={"row"} items={"center"}
@@ -26,7 +28,8 @@ const ReservationItem = observer(({item}) => {
                 <Text>{item.date}</Text>
             </Flex>
             <Flex direction={"row"} wrap={"wrap"} style={{width: "45%"}}>
-                <Text style={{textTransform: "uppercase", width: "100%"}}>{item.action}</Text>
+                <Text style={{textTransform: "uppercase", width: "100%"}}>{item.action} </Text>
+                {!isValidStatus && <Text>No Valid</Text>}
             </Flex>
             <Flex style={{flexDirection: "row", justifyContent: "space-around"}}>
                 <Flex diraction={"row"} style={{width: "10%", marginRight: "2%"}}>

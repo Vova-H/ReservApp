@@ -15,7 +15,8 @@ export const Reservation = sequelize.define('reservation', {
     action: {type: DataTypes.STRING, require: true},
     client: {type: DataTypes.ARRAY(DataTypes.STRING), require: true},
     date: {type: DataTypes.DATEONLY, require: true},
-    time: {type: DataTypes.STRING, require: true}
+    time: {type: DataTypes.STRING, require: true},
+    isValidStatus: {type: DataTypes.BOOLEAN}
 })
 
 User.hasMany(Reservation)

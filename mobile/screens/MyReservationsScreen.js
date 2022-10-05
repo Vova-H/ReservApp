@@ -14,7 +14,7 @@ const MyReservationsScreen = observer(() => {
 
     const fetchData = async () => {
         try {
-             await reservationStore.getReservations()
+            await reservationStore.getReservations()
         } catch (e) {
             navigation.navigate('Login')
             switch (e.response.status) {
@@ -31,7 +31,7 @@ const MyReservationsScreen = observer(() => {
 
     useEffect(() => {
         fetchData()
-    }, [reservationStore.reservations])
+    }, [fetchData])
 
 
     const renderReservations = ({item}) => (
