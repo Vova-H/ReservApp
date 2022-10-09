@@ -9,6 +9,7 @@ import {IconComponentProvider} from "@react-native-material/core";
 import CreatingScreen from "./screens/CreatingScreen";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import EditingScreen from "./screens/EditingScreen";
+import AdminScreen from "./screens/AdminScreen";
 
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
                         <Stack.Screen name="MyReservations" component={MyReservationsScreen}/>
                         <Stack.Screen name="Creating" component={CreatingScreen}/>
                         <Stack.Screen name="Editing" component={EditingScreen}/>
+                        <Stack.Screen name="Admin" component={AdminScreen}/>
                     </Stack.Navigator>
                 </NavigationContainer>
             </IconComponentProvider>

@@ -13,10 +13,6 @@ export default class ReservationService {
         return reservations
     }
 
-    async show(id, actionId) {
-        return Reservation.findOne({where: {userId: id, id: actionId}})
-    }
-
     async create(id, date, time, action) {
         const user = await User.findOne({where: {id: id}})
         const result = await handlerDataTime(date, time, id)
@@ -35,14 +31,25 @@ export default class ReservationService {
         return reservation
     }
 
-    async update(date, time, action, id, idParam) {
+    async update(date, time, action, id, idParam, roles) {
         const err = []
-        const reservation = await Reservation.findOne({
-            where: {
-                id: idParam,
-                userId: id
-            }
-        })
+        let reservation
+
+        if (roles.includes("ADMIN")) {
+            reservation = await Reservation.findOne({
+                where: {
+                    id: idParam
+                }
+            })
+        } else {
+            reservation = await Reservation.findOne({
+                where: {
+                    id: idParam,
+                    userId: id
+                }
+            })
+        }
+
         if (reservation === null) {
             err.push({"message": "Record not found"})
         }
@@ -60,22 +67,32 @@ export default class ReservationService {
         if (result.length !== 0) {
             return {'errors': result}
         }
+        if (roles.includes("ADMIN")) {
+            console.log(111111111)
+            Reservation.update({date: date, time: time, action: action}, {
+                where: {
+                    id: idParam,
+                }
+            })
+        } else {
+            Reservation.update({date: date, time: time, action: action}, {
+                where: {
+                    id: idParam,
+                    userId: id
+                }
+            })
+        }
 
-        Reservation.update({date: date, time: time, action: action}, {
-            where: {
-                id: idParam,
-                userId: id
-            }
-        })
         return {"message": "Your entry has been updated"}
     }
 
-    async delete(id, idParam) {
-        const reservation = await Reservation.findOne({where: {id: idParam, userId: id}})
-        if (reservation === null) {
-            return {"message": "Record not found"}
+    async delete(id, idParam, roles) {
+
+        if (roles.includes("ADMIN")) {
+            await Reservation.destroy({where: {id: idParam}})
+        } else {
+            await Reservation.destroy({where: {id: idParam, userId: id}})
         }
-        await Reservation.destroy({where: {id: idParam, userId: id}})
         return {"message": "Your entry has been successfully deleted"}
     }
 }

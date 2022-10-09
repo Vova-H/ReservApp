@@ -10,7 +10,6 @@ const ReservationItem = observer(({item}) => {
     const navigation = useNavigation()
 
     const {isValidStatus} = item
-    console.log(isValidStatus)
 
     return (
         <Flex direction={"row"} items={"center"}
@@ -21,15 +20,16 @@ const ReservationItem = observer(({item}) => {
                   borderTopWidth: 1,
                   backgroundColor: "#dcdcdc",
                   width: "100%",
+                  paddingVertical:"2%"
               }}>
             <Flex justify={"center"}
-                  style={{paddingLeft: "2%", paddingRight: "2%", marginRight: "5%", borderRightWidth: 1}}>
+                  style={{paddingHorizontal:"2%", paddingVertical:"2%", marginRight: "5%", borderRightWidth: 1}}>
                 <Text>{item.time}</Text>
                 <Text>{item.date}</Text>
             </Flex>
             <Flex direction={"row"} wrap={"wrap"} style={{width: "45%"}}>
                 <Text style={{textTransform: "uppercase", width: "100%"}}>{item.action} </Text>
-                {!isValidStatus && <Text>No Valid</Text>}
+                {isValidStatus === false && <Text style={{color: "red"}}>Not Active</Text>}
             </Flex>
             <Flex style={{flexDirection: "row", justifyContent: "space-around"}}>
                 <Flex diraction={"row"} style={{width: "10%", marginRight: "2%"}}>

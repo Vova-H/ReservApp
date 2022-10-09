@@ -2,7 +2,12 @@ import {Reservation, User} from "../models/models.js";
 
 export default class AdminService {
     async getAllUsers() {
-        return User.findAll()
+        return await User.findAll()
+        // users.map(async (user) => {
+        //     const {password, ...rest} = user;
+        //     await console.log(rest)
+        // })
+
     }
 
     async getAllReservations() {

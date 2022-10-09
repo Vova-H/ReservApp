@@ -15,11 +15,6 @@ class ReservationController {
         return this.reservationService.index(id)
     }
 
-    async show(req) {
-        const {id} = jsonwebtoken.verify(handlerGetToken(req), secret)
-        const actionId = req.params.id
-        return this.reservationService.show(id, actionId)
-    }
 
     async create(req) {
         const {id} = await jsonwebtoken.verify(handlerGetToken(req), secret)
@@ -28,16 +23,16 @@ class ReservationController {
     }
 
     async update(req) {
-        const {date, time, action} = await req.body
+        const {date, time, action, roles} = await req.body
         const {id} = await jsonwebtoken.verify(handlerGetToken(req), secret)
         const idParam = req.params.id
-        return this.reservationService.update(date, time, action, id, idParam)
+        return this.reservationService.update(date, time, action, id, idParam, roles)
     }
 
     async delete(req) {
-        const {id} = await jsonwebtoken.verify(handlerGetToken(req), secret)
+        const {id, roles} = await jsonwebtoken.verify(handlerGetToken(req), secret)
         const idParam = req.params.id
-        return this.reservationService.delete(id, idParam)
+        return this.reservationService.delete(id, idParam, roles)
     }
 }
 

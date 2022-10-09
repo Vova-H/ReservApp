@@ -5,6 +5,7 @@ import axios from "axios";
 class AuthStore {
     token = ""
     client = {}
+    isAdmin = false
 
     constructor() {
         makeAutoObservable(this, {}, {deep: true})
@@ -20,6 +21,7 @@ class AuthStore {
         runInAction(() => {
             this.token = token
             this.client = data[1]
+            this.isAdmin = data[1].roles.includes("ADMIN")
         })
         return data
     }

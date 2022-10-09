@@ -10,10 +10,6 @@ const reservationRouter = new Router()
 reservationRouter.get('/reservation',
     authMiddleware,
     tryCatchMiddleware(ReservationController.index.bind(ReservationController)))
-reservationRouter.get('/reservation/:id',
-    authMiddleware,
-    IdReqMiddleware,
-    tryCatchMiddleware(ReservationController.show.bind(ReservationController)))
 reservationRouter.post('/reservation',
     authMiddleware,
     tryCatchMiddleware(ReservationController.create.bind(ReservationController)))

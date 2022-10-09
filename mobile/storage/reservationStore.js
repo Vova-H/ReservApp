@@ -20,7 +20,7 @@ class ReservationStore {
             }
         })
         await runInAction(() => {
-            this.reservations = [...reservationsData.data]
+            this.reservations = reservationsData.data
         })
         return reservationsData
     }

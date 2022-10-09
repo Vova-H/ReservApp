@@ -1,11 +1,13 @@
 import React, {useEffect} from 'react';
-import {FlatList, StatusBar, Text} from "react-native";
+import {FlatList, StatusBar, Text, TouchableOpacity} from "react-native";
 import {AppBar, Button, Flex} from "@react-native-material/core";
 import {observer} from "mobx-react";
 import authStore from "../storage/authStore";
 import ReservationItem from "../components/ReservationItem";
 import {useNavigation} from "@react-navigation/native";
 import reservationStore from "../storage/reservationStore";
+import AuthStore from "../storage/authStore";
+import adminStore from "../storage/adminStore";
 
 
 const MyReservationsScreen = observer(() => {
@@ -28,10 +30,9 @@ const MyReservationsScreen = observer(() => {
         }
     }
 
-
     useEffect(() => {
         fetchData()
-    }, [fetchData])
+    }, [])
 
 
     const renderReservations = ({item}) => (
@@ -44,7 +45,16 @@ const MyReservationsScreen = observer(() => {
                 <StatusBar hidden/>
                 <AppBar
                     title='My Reservations'
-                    subtitle={authStore.client.email}
+                    subtitle={
+                        AuthStore.isAdmin ?
+                            <TouchableOpacity onPress={() => {
+                                adminStore.allReservations = []
+                                navigation.navigate("Admin")
+                            }}>
+                                <Text style={{color: "white"}}>{authStore.client.email} (Admin)</Text>
+                            </TouchableOpacity> :
+                            <Text style={{color: "white"}}>{authStore.client.email}</Text>
+                    }
                     trailing={props =>
                         <Button
                             variant="text"
