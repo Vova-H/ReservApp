@@ -1,5 +1,4 @@
 import {makeAutoObservable, runInAction} from "mobx";
-import axios from "axios";
 import auth from "./authStore";
 
 class ReservationStore {
@@ -12,59 +11,82 @@ class ReservationStore {
     }
 
     async getReservations() {
-        const reservationsData = await axios.get('http://10.0.2.2:5000/api/reservation', {
+        const response = await fetch('http://10.0.2.2:5000/api/reservation', {
             headers: {
                 Authorization: `Bearer ${auth.token}`,
                 Accept: 'application/json',
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json;charset=utf-8'
             }
         })
-        await runInAction(() => {
-            this.reservations = reservationsData.data
+        const data = await response.json()
+        console.log(data)
+        runInAction(() => {
+            this.reservations = [...this.reservations, ...data]
         })
-        return reservationsData
+        return data
     }
 
     async createReservation(reservation) {
-        const newReservation = await axios.post('http://10.0.2.2:5000/api/reservation', reservation, {
+        const response = await fetch('http://10.0.2.2:5000/api/reservation', {
+            method: "POST",
             headers: {
                 Authorization: `Bearer ${auth.token}`,
                 Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(reservation)
         })
-        await runInAction(() => {
-            this.reservations = [...this.reservations, newReservation]
-        })
-        return newReservation
+        const data = await response.json()
+        if (!data.errors) {
+            runInAction(() => {
+                this.reservations = [...this.reservations, data]
+            })
+        } else {
+            data.errors.map((error) => {
+                alert(error.message)
+            })
+        }
+        return data
     }
 
     async updateReservation(id, reservation) {
-        const updatedReservation = await axios.put(`http://10.0.2.2:5000/api/reservation/${id}`, reservation, {
+        const response = await fetch(`http://10.0.2.2:5000/api/reservation/${id}`, {
+            method: "PUT",
             headers: {
                 Authorization: `Bearer ${auth.token}`,
                 Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(reservation)
         })
-        await runInAction(() => {
-            this.reservations = [...this.reservations, updatedReservation]
+
+        const data = await response.json()
+        runInAction(() => {
+            this.reservations.map((el) => {
+                if (el.id === id) {
+                    el.action = data[1].action
+                    el.date = data[1].date
+                    el.time = data[1].time
+                }
+            })
         })
-        return updatedReservation
+        return data
     }
 
+
     async deleteReservation(id) {
-        const deletedReservation = await axios.delete(`http://10.0.2.2:5000/api/reservation/${id}`, {
+        const requestOptions = {
+            method: 'DELETE',
             headers: {
                 Authorization: `Bearer ${auth.token}`,
                 Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-        })
-        await runInAction(() => {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+        };
+        await fetch(`http://10.0.2.2:5000/api/reservation/${id}`, requestOptions)
+        runInAction(() => {
             this.reservations = this.reservations.filter((item) => item.id !== id)
         })
-        return deletedReservation
     }
 }
 

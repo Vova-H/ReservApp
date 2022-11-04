@@ -3,20 +3,20 @@ import {FlatList, StatusBar, Text, TouchableOpacity} from "react-native";
 import {AppBar, Button, Flex} from "@react-native-material/core";
 import {observer} from "mobx-react";
 import authStore from "../storage/authStore";
-import ReservationItem from "../components/ReservationItem";
-import {useNavigation} from "@react-navigation/native";
-import reservationStore from "../storage/reservationStore";
 import AuthStore from "../storage/authStore";
+import ReservationItem from "../components/ReservationItem";
 import adminStore from "../storage/adminStore";
+import reservationStore from "../storage/reservationStore";
+import {runInAction} from "mobx";
 
 
-const MyReservationsScreen = observer(() => {
+const MyReservationsScreen = ({navigation}) => {
 
-    const navigation = useNavigation()
+    // exitHandler()
 
     const fetchData = async () => {
         try {
-            await reservationStore.getReservations()
+            return reservationStore.getReservations()
         } catch (e) {
             navigation.navigate('Login')
             switch (e.response.status) {
@@ -63,6 +63,10 @@ const MyReservationsScreen = observer(() => {
                             style={{marginEnd: 4}}
                             onPress={() => {
                                 authStore.logout()
+                                runInAction(() =>
+                                    reservationStore.reservations = []
+                                )
+
                                 navigation.navigate("Login")
                             }}
                             {...props}
@@ -75,9 +79,11 @@ const MyReservationsScreen = observer(() => {
                             <Text style={{marginBottom: 20}}> You don't have any reservations </Text> :
                             <FlatList data={reservationStore.reservations}
                                       renderItem={renderReservations}
-                                      keyExtractor={item => {
-                                          item.id
-                                      }}
+                                      keyExtractor={
+                                          item => {
+                                              return item.id
+                                          }
+                                      }
                             />
                     }
                 </Flex>
@@ -91,7 +97,7 @@ const MyReservationsScreen = observer(() => {
             </Flex>
         </>
     );
-})
+}
 
 
-export default MyReservationsScreen;
+export default observer(MyReservationsScreen);

@@ -23,10 +23,12 @@ class ReservationController {
     }
 
     async update(req) {
-        const {date, time, action, roles} = await req.body
-        const {id} = await jsonwebtoken.verify(handlerGetToken(req), secret)
+        console.log(req)
+
+        const reqBody = await req.body
+        const {id, roles} = await jsonwebtoken.verify(handlerGetToken(req), secret)
         const idParam = req.params.id
-        return this.reservationService.update(date, time, action, id, idParam, roles)
+        return this.reservationService.update(reqBody, id, idParam, roles)
     }
 
     async delete(req) {

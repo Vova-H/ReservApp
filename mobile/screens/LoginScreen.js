@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
+    Alert, BackHandler,
     ImageBackground,
     Keyboard,
     KeyboardAvoidingView,
@@ -14,10 +15,19 @@ import screenStyle from "../styles/screenStyle";
 import {Button} from "@react-native-material/core";
 import {observer} from "mobx-react";
 import authStore from "../storage/authStore";
+import exitHandler from "../handlers/exitHandler";
 
 
 const LoginScreen = observer(({navigation}) => {
 
+    exitHandler()
+
+    const login = async (values) => {
+        const response = await authStore.login(values)
+        if (response[0]) {
+            navigation.navigate('MyReservations')
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -32,14 +42,7 @@ const LoginScreen = observer(({navigation}) => {
                             initialValues={{email: '', password: ''}}
                             validationSchema={loginValidationSchema}
                             onSubmit={async (values, actions) => {
-                                await authStore.login(values)
-                                    .then(response => {
-                                        if (response[0]) {
-                                            navigation.navigate('MyReservations')
-                                        } else {
-                                            alert(JSON.stringify(response.message))
-                                        }
-                                    })
+                                await login(values)
                                 actions.resetForm()
                             }}
                         >
@@ -61,7 +64,8 @@ const LoginScreen = observer(({navigation}) => {
                                                secureTextEntry={true}
                                                onBlur={props.handleBlur('password')}
                                     ></TextInput>
-                                    <Text style={styles.textError}>{props.touched.password && props.errors.password}</Text>
+                                    <Text
+                                        style={styles.textError}>{props.touched.password && props.errors.password}</Text>
                                     <Button title={"Login"}
                                             color={'#000'}
                                             paddingVertical={7}

@@ -18,13 +18,13 @@ const handlerDataTime = async (date, time) => {
             err.push({"message": "make an appointment during business hours"})
         }
 
-        const onlyTime = ((reqTime[0] * 3600 * 1000) + (reqTime[1] * 60 * 1000) - 10800000)
+        const onlyTime = ((reqTime[0] * 3600 * 1000) + (reqTime[1] * 60 * 1000))
         const onlyDate = Date.parse(date)
 
         if (onlyDate + onlyTime <= Date.now()) {
             err.push({"message": "you can't record past tense"})
         }
-        const dateTimeChecking = await Reservation.findOne({where: {date: date, time:time}})
+        const dateTimeChecking = await Reservation.findOne({where: {date: date, time: time}})
         if (dateTimeChecking) {
             err.push({"message": "There is already a record for the current time"})
         }
@@ -41,7 +41,7 @@ const handlerDataTime = async (date, time) => {
 
     } catch (e) {
         console.log(e)
-        err.push({"message": `invalid date entered`})
+        err.push({"message": e.message})
         return err
     }
 

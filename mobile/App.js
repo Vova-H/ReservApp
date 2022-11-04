@@ -8,7 +8,7 @@ import MyReservationsScreen from "./screens/MyReservationsScreen";
 import {IconComponentProvider} from "@react-native-material/core";
 import CreatingScreen from "./screens/CreatingScreen";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import EditingScreen from "./screens/EditingScreen";
+import UpdatingScreen from "./screens/UpdatingScreen";
 import AdminScreen from "./screens/AdminScreen";
 
 
@@ -26,7 +26,7 @@ export default function App() {
                         <Stack.Screen name="Register" component={RegisterScreen}/>
                         <Stack.Screen name="MyReservations" component={MyReservationsScreen}/>
                         <Stack.Screen name="Creating" component={CreatingScreen}/>
-                        <Stack.Screen name="Editing" component={EditingScreen}/>
+                        <Stack.Screen name="Editing" component={UpdatingScreen}/>
                         <Stack.Screen name="Admin" component={AdminScreen}/>
                     </Stack.Navigator>
                 </NavigationContainer>

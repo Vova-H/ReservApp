@@ -5,20 +5,31 @@ import {StatusBar} from "react-native";
 import authStore from "../storage/authStore";
 import {Formik} from "formik";
 import reservationsValidationSchema from "../validates/reservationsValidationSchema";
-import moment from 'moment';
 import reservationStore from "../storage/reservationStore";
 import {useNavigation} from "@react-navigation/native";
-import timeCreatingHandler from "../handlers/timeCreatingHandler";
-import MyFormCreatingScreen from "../components/MyFormCreatingScreen";
+import MyFormUpdatingScreen from "../components/MyFormUpdatingScreen";
 
-const CreatingScreen = () => {
+const UpdatingScreen = observer(() => {
 
     const navigation = useNavigation()
+    const oldReservation = reservationStore.editReservationItem
 
-    const createNewReservation = async (reservation) => {
-        const data = await reservationStore.createReservation(reservation)
-        navigation.navigate('MyReservations')
-        return data
+    const updatingReservation = async (id, values) => {
+        try {
+            const data = await reservationStore.updateReservation(id, values)
+            console.log(data)
+            if (data.errors) {
+                data.errors.map((el)=>{
+                    alert(el.message)
+                })
+            } else {
+                alert("Your reservation was updating successfully")
+            }
+            navigation.navigate('MyReservations')
+            return data[1]
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     return (
@@ -41,30 +52,26 @@ const CreatingScreen = () => {
                     />
                 }
             />
-
             <Flex>
                 <Formik
                     initialValues={
                         {
-                            date: moment().format('YYYY-MM-DD'),
-                            time: timeCreatingHandler,
-                            action: "to open sick list"
+                            date: oldReservation.date,
+                            time: oldReservation.time,
+                            action: oldReservation.action
                         }
                     }
                     validationSchema={reservationsValidationSchema}
-                    onSubmit={async (values) => {
-                        await createNewReservation(values)
-                    }}
+                    onSubmit={(values) => updatingReservation(oldReservation.id, values)}
                 >
                     {(props) => (
-                        <MyFormCreatingScreen values={props.values} setFieldValue={props.setFieldValue}
-                                              handleSubmit={props.handleSubmit}
-                        />
+                        <MyFormUpdatingScreen values={props.values} setFieldValue={props.setFieldValue}
+                                handleSubmit={props.handleSubmit}/>
                     )}
                 </Formik>
             </Flex>
         </Flex>
     )
-}
+})
 
-export default observer(CreatingScreen);
+export default UpdatingScreen;

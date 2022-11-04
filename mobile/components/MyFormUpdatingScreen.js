@@ -1,80 +1,11 @@
-import React, {useState} from 'react';
-import {AppBar, Button, Flex} from "@react-native-material/core";
-import {observer} from "mobx-react";
-import {StatusBar, Text} from "react-native";
-import authStore from "../storage/authStore";
-import {Formik} from "formik";
-import reservationsValidationSchema from "../validates/reservationsValidationSchema";
-import moment from 'moment';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import reservationStore from "../storage/reservationStore";
+import moment from "moment/moment";
+import {Button, Flex} from "@react-native-material/core";
+import {Text} from "react-native";
 import {Picker} from "@react-native-picker/picker";
-import {useNavigation} from "@react-navigation/native";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import {useState} from "react";
 
-const EditingScreen = observer(() => {
-
-    const navigation = useNavigation()
-    const oldReservation = reservationStore.editReservationItem
-
-    return (
-        <Flex fill>
-            <StatusBar hidden/>
-            <AppBar
-                title='New Reservation'
-                subtitle={authStore.client.email}
-                trailing={props =>
-                    <Button
-                        variant="text"
-                        title="Logout"
-                        compact
-                        style={{marginEnd: 4}}
-                        onPress={() => {
-                            authStore.logout()
-                            navigation.navigate("Login")
-                        }}
-                        {...props}
-                    />
-                }
-            />
-            <Flex>
-                <Formik
-                    initialValues={
-                        {
-                            date: oldReservation.date,
-                            time: oldReservation.time,
-                            action: oldReservation.action
-                        }
-                    }
-                    validationSchema={reservationsValidationSchema}
-                    onSubmit={async (values) => {
-
-                        await reservationStore.updateReservation(reservationStore.editReservationItem.id, values)
-                            .then(response => {
-                                console.log(response.data)
-                                if (response.data.errors) {
-                                    response.data.errors.map((el) => {
-                                        alert(el.message)
-                                    })
-                                } else {
-                                    alert("Your reservation was updating successfully")
-                                }
-                            })
-                            .then(navigation.navigate('MyReservations'))
-                            .catch(e => console.log(e))
-                    }}
-                >
-                    {(props) => (
-                        <MyForm values={props.values} setFieldValue={props.setFieldValue}
-                                handleSubmit={props.handleSubmit}/>
-                    )}
-                </Formik>
-            </Flex>
-        </Flex>
-    )
-})
-
-
-export const MyForm = props => {
+ const MyFormUpdatingScreen = props => {
     const {handleSubmit, values, setFieldValue} = props;
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [isTimePickerVisibility, setTimePickerVisibility] = useState(false)
@@ -166,4 +97,4 @@ export const MyForm = props => {
     )
 }
 
-export default EditingScreen;
+export default MyFormUpdatingScreen

@@ -4,14 +4,11 @@ import {observer} from "mobx-react";
 import {FlatList, StatusBar, StyleSheet, Text, TouchableOpacity} from "react-native";
 import authStore from "../storage/authStore";
 import AuthStore from "../storage/authStore";
-import {useNavigation} from "@react-navigation/native";
 import adminStore from "../storage/adminStore";
 import ReservationItem from "../components/ReservationItem";
+import {runInAction} from "mobx";
 
-const AdminScreen = observer(() => {
-
-    const navigation = useNavigation()
-
+const AdminScreen = ({navigation}) => {
 
     const renderReservations = ({item}) => (
         <ReservationItem item={item}/>
@@ -43,25 +40,36 @@ const AdminScreen = observer(() => {
                     />
                 }
             />
-            <Flex items={"center"} justify={"center"} style={{height:"70%"}}>
+            <Flex items={"center"} justify={"center"} style={{height: "70%"}}>
                 <FlatList data={adminStore.allReservations}
                           renderItem={renderReservations}
                           keyExtractor={(item) => item.id}
                 />
             </Flex>
+
+            {/*<Flex items={"center"} justify={"center"} style={{height: "70%"}}>*/}
+            {/*    <FlatList data={adminStore.allUsers}*/}
+            {/*              renderItem={}*/}
+            {/*              keyExtractor={(item) => item.id}*/}
+            {/*    />*/}
+            {/*</Flex>*/}
+
             <Flex>
 
                 <Button title="Show all registered users"
                         uppercase={true}
                         style={styles.button}
-                        onPress={async () => {
-                            await adminStore.getAllUsers()
+                        onPress={() => {
+                            adminStore.getAllUsers()
                         }}
                 />
                 <Button title="Show all reservations"
                         uppercase={true}
                         style={styles.button}
                         onPress={async () => {
+                            runInAction(() => {
+                                adminStore.allReservations = []
+                            })
                             await adminStore.getAllReservations()
                         }}
                 />
@@ -69,7 +77,7 @@ const AdminScreen = observer(() => {
 
         </Flex>
     );
-})
+}
 
 const styles = StyleSheet.create({
     button: {
@@ -79,4 +87,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default AdminScreen;
+export default observer(AdminScreen);

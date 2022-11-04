@@ -13,6 +13,7 @@ import {Formik} from "formik";
 import registrationValidationSchema from "../validates/registrationValidationSchema";
 import {Button} from "@react-native-material/core";
 import authStore from "../storage/authStore";
+import {observer} from "mobx-react";
 
 const RegisterScreen = (({navigation}) => {
 
@@ -98,4 +99,4 @@ const RegisterScreen = (({navigation}) => {
 
 const styles = screenStyle
 
-export default RegisterScreen;
+export default observer(RegisterScreen);

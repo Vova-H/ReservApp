@@ -1,17 +1,18 @@
 import {Reservation, User} from "../models/models.js";
+import handlerCheckActivity from "../handlers/handlerCheckActivity.js";
 
 export default class AdminService {
     async getAllUsers() {
         return await User.findAll()
-        // users.map(async (user) => {
-        //     const {password, ...rest} = user;
-        //     await console.log(rest)
-        // })
-
     }
 
     async getAllReservations() {
-        return Reservation.findAll()
+        const reservations = await Reservation.findAll()
+        reservations.map(el => {
+            el.isValidStatus = handlerCheckActivity(el)
+            el.save()
+        })
+        return reservations
     }
 }
 

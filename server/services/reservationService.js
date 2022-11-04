@@ -31,10 +31,9 @@ export default class ReservationService {
         return reservation
     }
 
-    async update(date, time, action, id, idParam, roles) {
+    async update(reqBody, id, idParam, roles) {
         const err = []
         let reservation
-
         if (roles.includes("ADMIN")) {
             reservation = await Reservation.findOne({
                 where: {
@@ -62,28 +61,26 @@ export default class ReservationService {
             return {'errors': err}
         }
 
-        const result = await handlerDataTime(date, time, id)
+        const result = await handlerDataTime(reqBody.date, reqBody.time, id)
 
         if (result.length !== 0) {
             return {'errors': result}
         }
         if (roles.includes("ADMIN")) {
-            console.log(111111111)
-            Reservation.update({date: date, time: time, action: action}, {
+            Reservation.update({date: reqBody.date, time: reqBody.time, action: reqBody.action}, {
                 where: {
                     id: idParam,
                 }
             })
         } else {
-            Reservation.update({date: date, time: time, action: action}, {
+            Reservation.update({date: reqBody.date, time: reqBody.time, action: reqBody.action}, {
                 where: {
                     id: idParam,
                     userId: id
                 }
             })
         }
-
-        return {"message": "Your entry has been updated"}
+        return [{"message": "Your entry has been updated"}, reqBody]
     }
 
     async delete(id, idParam, roles) {

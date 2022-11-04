@@ -1,5 +1,4 @@
 import {makeAutoObservable, runInAction} from "mobx";
-import axios from "axios";
 import auth from "./authStore";
 
 class AdminStore {
@@ -12,36 +11,37 @@ class AdminStore {
     }
 
     async getAllUsers() {
-        const allUsersData = await axios.get('http://10.0.2.2:5000/api/admin-users', {
+        const response = await fetch('http://10.0.2.2:5000/api/admin-users', {
             headers: {
                 Authorization: `Bearer ${auth.token}`,
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             }
         })
+
+        const data = await response.json()
         await runInAction(() => {
-            this.allUsers = allUsersData.data
+            this.allUsers = [...this.allUsers, ...data]
         })
-        console.log(this.allUsers)
-        return allUsersData
+        return await data
     }
+
 
     async getAllReservations() {
-        const allReservationsData = await axios.get('http://10.0.2.2:5000/api/admin-reservations', {
+        const response = await fetch('http://10.0.2.2:5000/api/admin-reservations', {
             headers: {
+                method: "GET",
                 Authorization: `Bearer ${auth.token}`,
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             }
         })
-        await runInAction(() => {
-            this.allReservations = allReservationsData.data
+        const data = await response.json()
+        runInAction(() => {
+            this.allReservations = [...this.allReservations, ...data]
         })
-        console.log(this.allReservations)
-        return allReservationsData
+        return await data
     }
-
-
 }
 
 export default new AdminStore()

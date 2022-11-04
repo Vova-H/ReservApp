@@ -8,7 +8,7 @@ class AuthStore {
     isAdmin = false
 
     constructor() {
-        makeAutoObservable(this, {}, {deep: true})
+        makeAutoObservable(this)
     }
 
     registration = async (user) => {
@@ -16,14 +16,22 @@ class AuthStore {
     }
 
     login = async (user) => {
-        const {data} = await axios.post('http://10.0.2.2:5000/api/login', user)
-        const token = data[0]
-        runInAction(() => {
-            this.token = token
-            this.client = data[1]
-            this.isAdmin = data[1].roles.includes("ADMIN")
-        })
-        return data
+        try {
+            const {data} = await axios.post('http://10.0.2.2:5000/api/login', user)
+            if (data.message) {
+                alert(data.message)
+            } else {
+                const token = data[0]
+                runInAction(() => {
+                    this.token = token
+                    this.client = data[1]
+                    this.isAdmin = data[1].roles.includes("ADMIN")
+                })
+            }
+            return await data
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     logout() {
