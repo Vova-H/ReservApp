@@ -12,8 +12,6 @@ import {runInAction} from "mobx";
 
 const MyReservationsScreen = ({navigation}) => {
 
-    // exitHandler()
-
     const fetchData = async () => {
         try {
             return reservationStore.getReservations()

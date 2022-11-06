@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {AppBar, Button, Flex} from "@react-native-material/core";
 import {observer} from "mobx-react";
 import {FlatList, StatusBar, StyleSheet, Text, TouchableOpacity} from "react-native";
@@ -7,11 +7,18 @@ import AuthStore from "../storage/authStore";
 import adminStore from "../storage/adminStore";
 import ReservationItem from "../components/ReservationItem";
 import {runInAction} from "mobx";
+import UserItem from "../components/UserItem";
 
 const AdminScreen = ({navigation}) => {
 
-    const renderReservations = ({item}) => (
+    const [showAllReservations, setShowAllReservations] = useState(false)
+    const [showAllUsers, setShowAllUsers] = useState(false)
+
+    const renderAllReservations = ({item}) => (
         <ReservationItem item={item}/>
+    )
+    const renderAllUsers = ({item}) => (
+        <UserItem item={item}/>
     )
 
     return (
@@ -40,27 +47,38 @@ const AdminScreen = ({navigation}) => {
                     />
                 }
             />
-            <Flex items={"center"} justify={"center"} style={{height: "70%"}}>
-                <FlatList data={adminStore.allReservations}
-                          renderItem={renderReservations}
-                          keyExtractor={(item) => item.id}
-                />
-            </Flex>
 
-            {/*<Flex items={"center"} justify={"center"} style={{height: "70%"}}>*/}
-            {/*    <FlatList data={adminStore.allUsers}*/}
-            {/*              renderItem={}*/}
-            {/*              keyExtractor={(item) => item.id}*/}
-            {/*    />*/}
-            {/*</Flex>*/}
+            {
+                showAllReservations ?
+                    <Flex items={"center"} justify={"center"} style={{height: "70%"}}>
+                        <FlatList data={adminStore.allReservations}
+                                  renderItem={renderAllReservations}
+                                  keyExtractor={(item) => item.id}
+                        />
+                    </Flex> : null
+            }
+            {
+                showAllUsers ?
+                    <Flex items={"center"} justify={"center"} style={{height: "70%"}}>
+                        <FlatList data={adminStore.allUsers}
+                                  renderItem={renderAllUsers}
+                                  keyExtractor={(item) => item.id}
+                        />
+                    </Flex> : null
+            }
 
             <Flex>
 
                 <Button title="Show all registered users"
                         uppercase={true}
                         style={styles.button}
-                        onPress={() => {
-                            adminStore.getAllUsers()
+                        onPress={async () => {
+                            runInAction(() => {
+                                adminStore.allUsers = []
+                                setShowAllReservations(false)
+                                setShowAllUsers(!showAllUsers)
+                            })
+                            await adminStore.getAllUsers()
                         }}
                 />
                 <Button title="Show all reservations"
@@ -69,6 +87,8 @@ const AdminScreen = ({navigation}) => {
                         onPress={async () => {
                             runInAction(() => {
                                 adminStore.allReservations = []
+                                setShowAllUsers(false)
+                                setShowAllReservations(!showAllReservations)
                             })
                             await adminStore.getAllReservations()
                         }}

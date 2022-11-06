@@ -18,7 +18,6 @@ class AdminStore {
                 'Content-Type': 'application/json',
             }
         })
-
         const data = await response.json()
         await runInAction(() => {
             this.allUsers = [...this.allUsers, ...data]
