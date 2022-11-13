@@ -28,11 +28,6 @@ async function startApp() {
     try {
         await sequelize.authenticate()
         await sequelize.sync()
-        // const sslServer = https.createServer({
-        //     key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
-        //     cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem"))
-        // }, app)
-        // sslServer.listen(PORT, () => console.log(`server running on port ${PORT}`))
         app.listen(PORT, () => console.log(`server running on port ${PORT}`))
 
     } catch (e) {

@@ -14,6 +14,10 @@ adminRouter.get('/admin-reservations',
     AuthMiddleware,
     roleMiddleware(["ADMIN"]),
     tryCatchMiddleware(AdminController.getAllReservations.bind(AdminController)))
+adminRouter.put('/admin-time',
+    AuthMiddleware,
+    roleMiddleware(["ADMIN"]),
+    tryCatchMiddleware(AdminController.changeWorkingTime.bind(AdminController)))
 
 
 export default adminRouter;

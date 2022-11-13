@@ -67,13 +67,13 @@ export default class ReservationService {
             return {'errors': result}
         }
         if (roles.includes("ADMIN")) {
-            Reservation.update({date: reqBody.date, time: reqBody.time, action: reqBody.action}, {
+            await Reservation.update({date: reqBody.date, time: reqBody.time, action: reqBody.action}, {
                 where: {
                     id: idParam,
                 }
             })
         } else {
-            Reservation.update({date: reqBody.date, time: reqBody.time, action: reqBody.action}, {
+           await Reservation.update({date: reqBody.date, time: reqBody.time, action: reqBody.action}, {
                 where: {
                     id: idParam,
                     userId: id

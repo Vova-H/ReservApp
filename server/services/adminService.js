@@ -1,5 +1,6 @@
-import {Reservation, User} from "../models/models.js";
+import {Reservation, Time, User} from "../models/models.js";
 import handlerCheckActivity from "../handlers/handlerCheckActivity.js";
+import handlerValidTime from "../handlers/handlerValidTime.js";
 
 export default class AdminService {
     async getAllUsers() {
@@ -13,6 +14,28 @@ export default class AdminService {
             el.save()
         })
         return reservations
+    }
+
+    async changeWorkingTime(startOfDay, endOfDay) {
+
+        const err = []
+        const isValidStartOfDay = handlerValidTime(startOfDay)
+        const isValidEndOfDay = handlerValidTime(endOfDay)
+        if (isValidStartOfDay || isValidEndOfDay) {
+            err.push({"message": "Not valid time"})
+        }
+        if (err.length !== 0) {
+            return {'errors': err}
+        }
+
+        await Time.update({startOfDay: startOfDay, endOfDay: endOfDay}, {
+            where: {
+                id: 1
+            }
+        })
+        return [{"message": "Working time has been updated"},
+            {startOfDay, endOfDay}
+        ]
     }
 }
 

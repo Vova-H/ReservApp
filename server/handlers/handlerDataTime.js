@@ -1,19 +1,26 @@
-import {Reservation} from "../models/models.js";
+import {Reservation, Time} from "../models/models.js";
+import handlerValidTime from "./handlerValidTime.js";
 
 const handlerDataTime = async (date, time) => {
     const err = []
+    const timeFromDb = await Time.findOne({
+        where: {
+            id: 1
+        }
+    })
+    const startOfDay = timeFromDb.dataValues.startOfDay
+    const endOfDay = timeFromDb.dataValues.endOfDay
+    const startOfDayArr = startOfDay.split(":")
+    const endOfDayArr = endOfDay.split(":")
+
     try {
         const reqTime = time.split(':')
-        if (reqTime[0] > 23 ||
-            reqTime[0] < 0 ||
-            reqTime[1] < 0 ||
-            reqTime[1] > 59
-        ) {
+        if (handlerValidTime(time) === false) {
             err.push({"message": "wrong time"})
             return err
         }
 
-        if (reqTime[0] > 17 || reqTime[0] < 9
+        if (reqTime[0] >= endOfDayArr[0] || reqTime[0] < startOfDayArr[0]
         ) {
             err.push({"message": "make an appointment during business hours"})
         }
