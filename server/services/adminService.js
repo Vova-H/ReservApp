@@ -16,6 +16,16 @@ export default class AdminService {
         return reservations
     }
 
+
+    async getWorkingTime() {
+        return await Time.findOne({
+            where: {
+                id: 1
+            }
+        })
+    }
+
+
     async changeWorkingTime(startOfDay, endOfDay) {
 
         const err = []

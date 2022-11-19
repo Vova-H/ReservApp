@@ -19,7 +19,6 @@ class ReservationStore {
             }
         })
         const data = await response.json()
-        console.log(data)
         runInAction(() => {
             this.reservations = [...this.reservations, ...data]
         })

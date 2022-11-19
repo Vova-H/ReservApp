@@ -5,6 +5,8 @@ class AdminStore {
 
     allReservations = []
     allUsers = []
+    startOfDay = ""
+    endOfDay = ""
 
     constructor() {
         makeAutoObservable(this)
@@ -41,6 +43,40 @@ class AdminStore {
         })
         return await data
     }
+
+    async getWorkingTime() {
+        const response = await fetch('http://10.0.2.2:5000/api/admin-time', {
+            headers: {
+                method: "GET",
+                Authorization: `Bearer ${auth.token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        const data = await response.json()
+        const {startOfDay, endOfDay} = await data
+        await runInAction(() => {
+            this.startOfDay = startOfDay
+            this.endOfDay = endOfDay
+        })
+        return await data
+    }
+
+    async updateWorkingTime(newTime) {
+        const response = await fetch('http://10.0.2.2:5000/api/admin-time', {
+            method: "PUT",
+            headers: {
+                Authorization: `Bearer ${auth.token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newTime)
+        })
+
+        return await response.json()
+    }
+
+
 }
 
 export default new AdminStore()

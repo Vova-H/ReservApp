@@ -18,12 +18,14 @@ const ReservationItem = observer(({item}) => {
                   style={{paddingHorizontal: "2%", paddingVertical: "2%", marginRight: "5%", borderRightWidth: 1}}>
                 <Text>{time}</Text>
                 <Text>{date}</Text>
+                {isValidStatus === false &&
+                    <Text style={{color: "red"}}>Not Active</Text>
+                }
             </Flex>
-            <Flex direction={"column"} wrap={"wrap"} style={{width: "45%"}}>
-                <Text style={{textTransform: "uppercase", width: "100%"}}>{action} </Text>
-                {authStore.isAdmin && <Text>( {client} )</Text>}
-                {isValidStatus === false && <Text style={{color: "red"}}>Not Active</Text>}
 
+            <Flex direction={"column"} wrap={"wrap"} style={{width: "45%"}}>
+                <Text style={{textTransform: "uppercase", width: "100%"}}>{action}</Text>
+                {authStore.isAdmin && <Text>( {client} )</Text>}
             </Flex>
             <Flex style={{flexDirection: "row", justifyContent: "space-around"}}>
                 <Flex diraction={"row"} style={{width: "10%", marginRight: "2%"}}>
@@ -48,11 +50,15 @@ const styles = StyleSheet.create({
     itemWrapper: {
         marginBottom: 20,
         marginTop: 20,
-        borderBottomWidth: 1,
-        borderTopWidth: 1,
         backgroundColor: "#dcdcdc",
         width: "100%",
-        paddingVertical: "2%"
+        paddingVertical: "2%",
+        paddingHorizontal: "3%",
+        borderTopStartRadius: 30,
+        borderBottomStartRadius: 30,
+        borderTopEndRadius: 30,
+        borderBottomEndRadius: 30,
+        height: 120
     }
 })
 

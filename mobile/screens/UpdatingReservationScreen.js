@@ -9,7 +9,7 @@ import reservationStore from "../storage/reservationStore";
 import {useNavigation} from "@react-navigation/native";
 import MyFormUpdatingScreen from "../components/MyFormUpdatingScreen";
 
-const UpdatingScreen = observer(() => {
+const UpdatingReservationScreen = observer(() => {
 
     const navigation = useNavigation()
     const oldReservation = reservationStore.editReservationItem
@@ -17,7 +17,6 @@ const UpdatingScreen = observer(() => {
     const updatingReservation = async (id, values) => {
         try {
             const data = await reservationStore.updateReservation(id, values)
-            console.log(data)
             if (data.errors) {
                 data.errors.map((el)=>{
                     alert(el.message)
@@ -74,4 +73,4 @@ const UpdatingScreen = observer(() => {
     )
 })
 
-export default UpdatingScreen;
+export default UpdatingReservationScreen;

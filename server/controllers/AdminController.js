@@ -16,6 +16,10 @@ class AdminController {
         return this.adminService.getAllReservations()
     }
 
+    async getWorkingTime() {
+        return this.adminService.getWorkingTime()
+    }
+
     async changeWorkingTime(req) {
         const {startOfDay, endOfDay} = req.body
         return this.adminService.changeWorkingTime(startOfDay, endOfDay)

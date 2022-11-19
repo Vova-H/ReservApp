@@ -16,6 +16,7 @@ import {Button} from "@react-native-material/core";
 import {observer} from "mobx-react";
 import authStore from "../storage/authStore";
 import exitHandler from "../handlers/exitHandler";
+import reservationStore from "../storage/reservationStore";
 
 
 const LoginScreen = observer(({navigation}) => {
@@ -25,6 +26,7 @@ const LoginScreen = observer(({navigation}) => {
     const login = async (values) => {
         const response = await authStore.login(values)
         if (response[0]) {
+            reservationStore.reservations = []
             navigation.navigate('MyReservations')
         }
     }

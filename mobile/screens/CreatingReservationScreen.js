@@ -11,7 +11,7 @@ import {useNavigation} from "@react-navigation/native";
 import timeCreatingHandler from "../handlers/timeCreatingHandler";
 import MyFormCreatingScreen from "../components/MyFormCreatingScreen";
 
-const CreatingScreen = () => {
+const CreatingReservationScreen = () => {
 
     const navigation = useNavigation()
 
@@ -67,4 +67,4 @@ const CreatingScreen = () => {
     )
 }
 
-export default observer(CreatingScreen);
+export default observer(CreatingReservationScreen);
