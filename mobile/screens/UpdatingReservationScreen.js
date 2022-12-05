@@ -1,13 +1,12 @@
 import React from 'react';
-import {AppBar, Button, Flex} from "@react-native-material/core";
+import {Flex} from "@react-native-material/core";
 import {observer} from "mobx-react";
-import {StatusBar} from "react-native";
-import authStore from "../storage/authStore";
 import {Formik} from "formik";
 import reservationsValidationSchema from "../validates/reservationsValidationSchema";
 import reservationStore from "../storage/reservationStore";
 import {useNavigation} from "@react-navigation/native";
 import MyFormUpdatingScreen from "../components/MyFormUpdatingScreen";
+import Header from "../components/UI/Header";
 
 const UpdatingReservationScreen = observer(() => {
 
@@ -33,24 +32,7 @@ const UpdatingReservationScreen = observer(() => {
 
     return (
         <Flex fill>
-            <StatusBar hidden/>
-            <AppBar
-                title='New Reservation'
-                subtitle={authStore.client.email}
-                trailing={props =>
-                    <Button
-                        variant="text"
-                        title="Logout"
-                        compact
-                        style={{marginEnd: 4}}
-                        onPress={() => {
-                            authStore.logout()
-                            navigation.navigate("Login")
-                        }}
-                        {...props}
-                    />
-                }
-            />
+            <Header title={"Update Reservation"}/>
             <Flex>
                 <Formik
                     initialValues={

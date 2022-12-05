@@ -1,3 +1,3 @@
 import startApp from "./server.js"
 
-startApp()
+await startApp()

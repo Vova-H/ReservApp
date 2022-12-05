@@ -13,6 +13,9 @@ reservationRouter.get('/reservation',
 reservationRouter.post('/reservation',
     authMiddleware,
     tryCatchMiddleware(ReservationController.create.bind(ReservationController)))
+reservationRouter.post('/reservation-checkTime',
+    authMiddleware,
+    tryCatchMiddleware(ReservationController.checkFreeTime.bind(ReservationController)))
 reservationRouter.put('/reservation/:id',
     authMiddleware,
     IdReqMiddleware,

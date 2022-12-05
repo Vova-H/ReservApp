@@ -3,6 +3,7 @@ import secret from "../config.js"
 import handlerGetToken from "../handlers/handlerGetToken.js";
 
 export default function (req, res, next) {
+
     try {
         const token = handlerGetToken(req)
 

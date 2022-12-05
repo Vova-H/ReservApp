@@ -10,6 +10,7 @@ import reservationStore from "../storage/reservationStore";
 import {useNavigation} from "@react-navigation/native";
 import timeCreatingHandler from "../handlers/timeCreatingHandler";
 import MyFormCreatingScreen from "../components/MyFormCreatingScreen";
+import Header from "../components/UI/Header";
 
 const CreatingReservationScreen = () => {
 
@@ -23,25 +24,7 @@ const CreatingReservationScreen = () => {
 
     return (
         <Flex fill>
-            <StatusBar hidden/>
-            <AppBar
-                title='New Reservation'
-                subtitle={authStore.client.email}
-                trailing={props =>
-                    <Button
-                        variant="text"
-                        title="Logout"
-                        compact
-                        style={{marginEnd: 4}}
-                        onPress={() => {
-                            authStore.logout()
-                            navigation.navigate("Login")
-                        }}
-                        {...props}
-                    />
-                }
-            />
-
+            <Header title={"New Reservation"}/>
             <Flex>
                 <Formik
                     initialValues={

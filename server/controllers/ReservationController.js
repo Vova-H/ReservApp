@@ -15,16 +15,18 @@ class ReservationController {
         return this.reservationService.index(id)
     }
 
-
     async create(req) {
         const {id} = await jsonwebtoken.verify(handlerGetToken(req), secret)
         const {date, time, action} = await req.body
         return this.reservationService.create(id, date, time, action)
     }
 
-    async update(req) {
-        console.log(req)
+    async checkFreeTime(req) {
+        const {date} = req.body
+        return this.reservationService.checkFreeTime(date)
+    }
 
+    async update(req) {
         const reqBody = await req.body
         const {id, roles} = await jsonwebtoken.verify(handlerGetToken(req), secret)
         const idParam = req.params.id

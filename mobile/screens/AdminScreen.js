@@ -1,17 +1,16 @@
 import React, {useState} from 'react';
-import {AppBar, Button, Flex} from "@react-native-material/core";
+import {Button, Flex} from "@react-native-material/core";
 import {observer} from "mobx-react";
-import {FlatList, StatusBar, StyleSheet, Text, TouchableOpacity} from "react-native";
-import authStore from "../storage/authStore";
-import AuthStore from "../storage/authStore";
+import {FlatList, StyleSheet, Text} from "react-native";
 import adminStore from "../storage/adminStore";
 import {runInAction} from "mobx";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import ReservationItem from "../components/ReservationItem";
-import UserItem from "../components/UserItem";
+import ReservationItem from "../components/UI/ReservationItem";
+import UserItem from "../components/UI/UserItem";
+import Header from "../components/UI/Header";
 
 
-const AdminScreen = ({navigation}) => {
+const AdminScreen = () => {
 
     const [showAllReservations, setShowAllReservations] = useState(false)
     const [showAllUsers, setShowAllUsers] = useState(false)
@@ -57,7 +56,7 @@ const AdminScreen = ({navigation}) => {
 
 
     const renderAllReservations = ({item}) => (
-        <ReservationItem item={item}/>
+        <ReservationItem item={item} showClient={true}/>
     )
     const renderAllUsers = ({item}) => (
         <UserItem item={item}/>
@@ -70,31 +69,7 @@ const AdminScreen = ({navigation}) => {
 
     return (
         <Flex style={{flex: 1, justifyContent: "space-between"}}>
-            <StatusBar hidden/>
-            <AppBar
-                title='My Reservations'
-                subtitle={
-                    AuthStore.isAdmin ?
-                        <TouchableOpacity>
-                            <Text style={{color: "white"}}>{authStore.client.email} (Admin)</Text>
-                        </TouchableOpacity> :
-                        <Text style={{color: "white"}}>{authStore.client.email}</Text>
-                }
-                trailing={props =>
-                    <Button
-                        variant="text"
-                        title="Logout"
-                        compact
-                        style={{marginEnd: 4}}
-                        onPress={() => {
-                            authStore.logout()
-                            navigation.navigate("Login")
-                        }}
-                        {...props}
-                    />
-                }
-            />
-
+            <Header title={"Admin Page"}/>
             {
                 showTimeProperty ?
                     <Flex>
@@ -104,6 +79,7 @@ const AdminScreen = ({navigation}) => {
                                 <DateTimePickerModal
                                     isVisible={isStartOfDayTimePickerVisible}
                                     mode="time"
+                                    minuteInterval={30}
                                     onConfirm={handleStartOfDayConfirm}
                                     onCancel={hideStartOfDayPicker}
                                 />
@@ -113,11 +89,12 @@ const AdminScreen = ({navigation}) => {
                                 <DateTimePickerModal
                                     isVisible={isEndOfDayTimePickerVisible}
                                     mode="time"
+                                    minuteInterval={30}
                                     onConfirm={handleEndOfDayConfirm}
                                     onCancel={hideEndOfDayPicker}
                                 />
                             </Flex>
-                            <Button title="Save changes" onPress={() => {
+                            <Button title="Save changes" color="green" onPress={() => {
                                 updateWorkingTime(
                                     {
                                         startOfDay: adminStore.startOfDay,

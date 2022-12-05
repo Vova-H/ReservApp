@@ -2,12 +2,12 @@ import React from 'react';
 import {Flex, IconButton} from "@react-native-material/core";
 import {StyleSheet, Text} from "react-native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import reservationStore from "../storage/reservationStore";
+import reservationStore from "../../storage/reservationStore";
 import {observer} from "mobx-react";
 import {useNavigation} from "@react-navigation/native";
-import authStore from "../storage/authStore";
+import authStore from "../../storage/authStore";
 
-const ReservationItem = observer(({item}) => {
+const ReservationItem = observer(({item, showClient}) => {
     const navigation = useNavigation()
 
     const {isValidStatus, action, date, time, client, id} = item
@@ -25,7 +25,7 @@ const ReservationItem = observer(({item}) => {
 
             <Flex direction={"column"} wrap={"wrap"} style={{width: "45%"}}>
                 <Text style={{textTransform: "uppercase", width: "100%"}}>{action}</Text>
-                {authStore.isAdmin && <Text>( {client} )</Text>}
+                {authStore.isAdmin && showClient ? <Text>( {client} )</Text> : null}
             </Flex>
             <Flex style={{flexDirection: "row", justifyContent: "space-around"}}>
                 <Flex diraction={"row"} style={{width: "10%", marginRight: "2%"}}>

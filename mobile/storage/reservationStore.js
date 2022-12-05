@@ -5,6 +5,7 @@ class ReservationStore {
 
     reservations = []
     editReservationItem = {}
+    availableTimes = []
 
     constructor() {
         makeAutoObservable(this)
@@ -24,6 +25,24 @@ class ReservationStore {
         })
         return data
     }
+
+    async getAvailableTime(day) {
+        const response = await fetch('http://10.0.2.2:5000/api/reservation-checkTime', {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${auth.token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(day)
+        })
+        const data = await response.json()
+        runInAction(() => {
+            this.availableTimes = data
+        })
+        return await data
+    }
+
 
     async createReservation(reservation) {
         const response = await fetch('http://10.0.2.2:5000/api/reservation', {

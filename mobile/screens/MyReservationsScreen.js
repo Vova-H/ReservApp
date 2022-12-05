@@ -1,20 +1,20 @@
 import React, {useEffect} from 'react';
-import {FlatList, StatusBar, Text, TouchableOpacity} from "react-native";
-import {AppBar, Button, Flex} from "@react-native-material/core";
+import {FlatList, Text} from "react-native";
+import {Button, Flex} from "@react-native-material/core";
 import {observer} from "mobx-react";
-import authStore from "../storage/authStore";
-import AuthStore from "../storage/authStore";
-import ReservationItem from "../components/ReservationItem";
-import adminStore from "../storage/adminStore";
+import ReservationItem from "../components/UI/ReservationItem";
 import reservationStore from "../storage/reservationStore";
-import {runInAction} from "mobx";
+import Header from "../components/UI/Header";
+import {useNavigation} from "@react-navigation/native";
 
 
-const MyReservationsScreen = ({navigation}) => {
+const MyReservationsScreen = () => {
+
+    const navigation = useNavigation()
 
     const fetchData = async () => {
         try {
-            return reservationStore.getReservations()
+            return await reservationStore.getReservations()
         } catch (e) {
             navigation.navigate('Login')
             switch (e.response.status) {
@@ -29,48 +29,18 @@ const MyReservationsScreen = ({navigation}) => {
     }
 
     useEffect(() => {
-        fetchData()
+        fetchData().then()
     }, [])
 
 
     const renderReservations = ({item}) => (
-        <ReservationItem item={item}/>
+        <ReservationItem item={item} showClient={false}/>
     )
 
     return (
         <>
-            <Flex fill>
-                <StatusBar hidden/>
-                <AppBar
-                    title='My Reservations'
-                    subtitle={
-                        AuthStore.isAdmin ?
-                            <TouchableOpacity onPress={() => {
-                                adminStore.allReservations = []
-                                navigation.navigate("Admin")
-                            }}>
-                                <Text style={{color: "white"}}>{authStore.client.email} (Admin)</Text>
-                            </TouchableOpacity> :
-                            <Text style={{color: "white"}}>{authStore.client.email}</Text>
-                    }
-                    trailing={props =>
-                        <Button
-                            variant="text"
-                            title="Logout"
-                            compact
-                            style={{marginEnd: 4}}
-                            onPress={() => {
-                                authStore.logout()
-                                runInAction(() =>
-                                    reservationStore.reservations = []
-                                )
-
-                                navigation.navigate("Login")
-                            }}
-                            {...props}
-                        />
-                    }
-                />
+            <Flex fill style={{justifyContent: "space-between"}}>
+                <Header title={"My Reservations"}/>
                 <Flex fill items={"center"} justify={"center"}>
                     {
                         reservationStore.reservations.length === 0 ?

@@ -1,6 +1,8 @@
-import {Reservation, User} from "../models/models.js";
+import {Reservation, Time, User} from "../models/models.js";
 import handlerDataTime from "../handlers/handlerDataTime.js";
 import handlerCheckActivity from "../handlers/handlerCheckActivity.js";
+import {where} from "sequelize";
+import handlerShowTimes from "../handlers/handlerShowTimes.js";
 
 
 export default class ReservationService {
@@ -30,6 +32,36 @@ export default class ReservationService {
         await reservation.save()
         return reservation
     }
+
+    async checkFreeTime(date) {
+
+        const {startOfDay} = await Time.findOne()
+        const {endOfDay} = await Time.findOne()
+
+        const allWorkingTime = handlerShowTimes(startOfDay, endOfDay)
+        const busyTimes = []
+        const data = await Reservation.findAll({
+            where: {
+                date: date
+            }
+        })
+
+        data.map((el) => {
+            busyTimes.push(el.dataValues.time)
+        })
+
+        const checkedTime = []
+        allWorkingTime.map((time) => {
+            checkedTime.push({time: time, isFree: true})
+            busyTimes.map((busyTime) => {
+                if (time === busyTime) {
+                    checkedTime.push({time: time, isFree: false})
+                }
+            })
+        })
+        return checkedTime
+    }
+
 
     async update(reqBody, id, idParam, roles) {
         const err = []
@@ -73,7 +105,7 @@ export default class ReservationService {
                 }
             })
         } else {
-           await Reservation.update({date: reqBody.date, time: reqBody.time, action: reqBody.action}, {
+            await Reservation.update({date: reqBody.date, time: reqBody.time, action: reqBody.action}, {
                 where: {
                     id: idParam,
                     userId: id
@@ -84,7 +116,6 @@ export default class ReservationService {
     }
 
     async delete(id, idParam, roles) {
-
         if (roles.includes("ADMIN")) {
             await Reservation.destroy({where: {id: idParam}})
         } else {
