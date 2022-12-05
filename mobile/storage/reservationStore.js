@@ -40,6 +40,7 @@ class ReservationStore {
         runInAction(() => {
             this.availableTimes = data
         })
+
         return await data
     }
 

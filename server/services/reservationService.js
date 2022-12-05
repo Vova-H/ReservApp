@@ -51,11 +51,12 @@ export default class ReservationService {
         })
 
         const checkedTime = []
-        allWorkingTime.map((time) => {
+        allWorkingTime.map((time, index) => {
             checkedTime.push({time: time, isFree: true})
             busyTimes.map((busyTime) => {
                 if (time === busyTime) {
-                    checkedTime.push({time: time, isFree: false})
+                    checkedTime[index].isFree = false
+
                 }
             })
         })

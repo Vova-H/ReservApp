@@ -6,6 +6,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {useEffect, useState} from "react";
 import reservationStore from "../storage/reservationStore";
 import TimeItem from "./UI/TimeItem";
+import {runInAction} from "mobx";
 
 const MyFormCreatingScreen = props => {
     const {handleSubmit, values, setFieldValue} = props;
