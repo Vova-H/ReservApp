@@ -78,17 +78,20 @@ class ReservationStore {
             },
             body: JSON.stringify(reservation)
         })
-
         const data = await response.json()
-        runInAction(() => {
-            this.reservations.map((el) => {
-                if (el.id === id) {
-                    el.action = data[1].action
-                    el.date = data[1].date
-                    el.time = data[1].time
-                }
+
+        if (!data.errors) {
+            runInAction(() => {
+                this.reservations.map((el) => {
+                    if (el.id === id) {
+                        el.action = data[1].action
+                        el.date = data[1].date
+                        el.time = data[1].time
+                    }
+                })
             })
-        })
+        }
+
         return data
     }
 

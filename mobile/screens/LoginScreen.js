@@ -1,6 +1,5 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
-    Alert, BackHandler,
     ImageBackground,
     Keyboard,
     KeyboardAvoidingView,
@@ -15,13 +14,10 @@ import screenStyle from "../styles/screenStyle";
 import {Button} from "@react-native-material/core";
 import {observer} from "mobx-react";
 import authStore from "../storage/authStore";
-import exitHandler from "../handlers/exitHandler";
 import reservationStore from "../storage/reservationStore";
 
 
 const LoginScreen = observer(({navigation}) => {
-
-    exitHandler()
 
     const login = async (values) => {
         const response = await authStore.login(values)

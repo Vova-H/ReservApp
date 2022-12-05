@@ -17,7 +17,7 @@ const UpdatingReservationScreen = observer(() => {
         try {
             const data = await reservationStore.updateReservation(id, values)
             if (data.errors) {
-                data.errors.map((el)=>{
+                data.errors.map((el) => {
                     alert(el.message)
                 })
             } else {
@@ -33,7 +33,7 @@ const UpdatingReservationScreen = observer(() => {
     return (
         <Flex fill>
             <Header title={"Update Reservation"}/>
-            <Flex>
+            <Flex style={{flex: 1}}>
                 <Formik
                     initialValues={
                         {
@@ -47,7 +47,7 @@ const UpdatingReservationScreen = observer(() => {
                 >
                     {(props) => (
                         <MyFormUpdatingScreen values={props.values} setFieldValue={props.setFieldValue}
-                                handleSubmit={props.handleSubmit}/>
+                                              handleSubmit={props.handleSubmit} oldDay={oldReservation.date}/>
                     )}
                 </Formik>
             </Flex>

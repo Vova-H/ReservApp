@@ -1,7 +1,6 @@
 import {Reservation, Time, User} from "../models/models.js";
 import handlerDataTime from "../handlers/handlerDataTime.js";
 import handlerCheckActivity from "../handlers/handlerCheckActivity.js";
-import {where} from "sequelize";
 import handlerShowTimes from "../handlers/handlerShowTimes.js";
 
 

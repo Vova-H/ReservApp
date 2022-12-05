@@ -1,12 +1,12 @@
 import moment from "moment/moment";
-import {Button, Flex, Icon, IconButton} from "@react-native-material/core";
-import {Modal, StyleSheet, Text} from "react-native";
+import {Button, Flex} from "@react-native-material/core";
+import {StyleSheet, Text} from "react-native";
 import {Picker} from "@react-native-picker/picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {useEffect, useState} from "react";
 import reservationStore from "../storage/reservationStore";
 import TimeItem from "./UI/TimeItem";
-import {runInAction} from "mobx";
+import CheckingWorkingTimeModal from "./CheckingWorkingTimeModal";
 
 const MyFormCreatingScreen = props => {
     const {handleSubmit, values, setFieldValue} = props;
@@ -75,129 +75,87 @@ const MyFormCreatingScreen = props => {
     )
 
     return (
-        <Flex style={{flexDirection: "column", alignContent: "space-between"}}>
+        <Flex style={styles.mainContainer}>
             <Flex>
-                <Text onPress={showDatePicker}
-                      style={{fontSize: 40, textAlign: "center", marginBottom: "5%", marginTop: "10%"}}
-                >{moment(values.date).format('YYYY-MM-DD')}</Text>
-                <Text onPress={showTimePicker}
-                      style={{fontSize: 40, textAlign: "center", marginBottom: "5%"}}
-                >{values.time} </Text>
-                <Picker
-                    selectedValue={values.action}
-                    onValueChange={async (itemValue, itemIndex) => {
-                        await handleAction(itemValue)
-                    }}
-                    style={{
-                        width: "80%",
-                        justifyContent: "center",
-                        alignSelf: "center",
-                    }}
-                >
-                    <Picker.Item style={styles.pickerItem} label="to open sick list" value="to open sick list"/>
-                    <Picker.Item style={styles.pickerItem} label="to get analyses" value="to get analyses"/>
-                    <Picker.Item style={styles.pickerItem} label="to make a declaration" value="to make a declaration"/>
-                    <Picker.Item style={styles.pickerItem} label="to get prescription for painkillers"
-                                 value="to get prescription for painkillers"/>
-                </Picker>
-                <DateTimePickerModal
-                    isVisible={isDatePickerVisible}
-                    mode="date"
-                    onConfirm={handleDateConfirm}
-                    onCancel={hideDatePicker}
-                    data={moment(values.date).format('YYYY-MM-DD')}
-                    minimumDate={new Date(Date.now())}
-                />
-                <DateTimePickerModal
-                    isVisible={isTimePickerVisibility}
-                    mode="time"
-                    onConfirm={handleTimeConfirm}
-                    onCancel={hideTimePicker}
-                    data={values.time}
-                    minuteInterval={15}
+                <Flex>
+                    <Text onPress={showDatePicker}
+                          style={{fontSize: 40, textAlign: "center", marginBottom: "5%", marginTop: "10%"}}
+                    >{moment(values.date).format('YYYY-MM-DD')}</Text>
+                    <Text onPress={showTimePicker}
+                          style={{fontSize: 40, textAlign: "center", marginBottom: "5%"}}
+                    >{values.time} </Text>
+                    <Picker
+                        selectedValue={values.action}
+                        onValueChange={async (itemValue, itemIndex) => {
+                            await handleAction(itemValue)
+                        }}
+                        style={{
+                            width: "80%",
+                            justifyContent: "center",
+                            alignSelf: "center",
+                        }}
+                    >
+                        <Picker.Item style={styles.pickerItem} label="to open sick list" value="to open sick list"/>
+                        <Picker.Item style={styles.pickerItem} label="to get analyses" value="to get analyses"/>
+                        <Picker.Item style={styles.pickerItem} label="to make a declaration"
+                                     value="to make a declaration"/>
+                        <Picker.Item style={styles.pickerItem} label="to get prescription for painkillers"
+                                     value="to get prescription for painkillers"/>
+                    </Picker>
+                    <DateTimePickerModal
+                        isVisible={isDatePickerVisible}
+                        mode="date"
+                        onConfirm={handleDateConfirm}
+                        onCancel={hideDatePicker}
+                        data={moment(values.date).format('YYYY-MM-DD')}
+                        minimumDate={new Date(Date.now())}
+                    />
+                    <DateTimePickerModal
+                        isVisible={isTimePickerVisibility}
+                        mode="time"
+                        onConfirm={handleTimeConfirm}
+                        onCancel={hideTimePicker}
+                        data={values.time}
+                        minuteInterval={15}
+                    />
+                </Flex>
+                <Text style={{fontSize: 24, marginVertical: 10}}
+                      onPress={() => {
+                          setIsAvailableTime(!isAvailableTime)
+                      }}>
+                    Click here to check available time...
+                </Text>
+            </Flex>
+            <Flex style={styles.createButtonWrapper}>
+                <Button title="Create"
+                        onPress={handleSubmit}
                 />
             </Flex>
-            <Text style={{fontSize: 24, marginVertical: 10}}
-                  onPress={() => {
-                      setIsAvailableTime(!isAvailableTime)
-                  }}>
-                Click here to check available time...
-            </Text>
-            <Button title="Create"
-                    color="green"
-                    onPress={handleSubmit}
+
+            <CheckingWorkingTimeModal isAvailableTime={isAvailableTime}
+                                      setIsAvailableTime={setIsAvailableTime}
+                                      renderWorkingTime={renderWorkingTime}
             />
-            <Modal transparent={true} animationType={"slide"} visible={isAvailableTime}>
-                <Flex style={styles.modalContainer}>
-                    <Flex style={styles.modalSubContainer}>
-                        <Flex style={styles.closeContentWrapper}>
-                            <Text style={styles.closeButton}>Working Time</Text>
-                            <IconButton
-                                onPress={() => {
-                                    setIsAvailableTime(!isAvailableTime)
-                                }}
-                                icon={props => <Icon name="close" {...props} color="#5B798FFF"/>}
-                            />
-                        </Flex>
-                        <Flex style={styles.modalContentWrapper}>
-                            {
-                                reservationStore?.availableTimes?.map((el, index) => {
-                                    return renderWorkingTime({el, index})
-                                })
-                            }
-                        </Flex>
-                    </Flex>
-                </Flex>
-            </Modal>
         </Flex>
     )
 }
 
 
 const styles = StyleSheet.create({
-    modalContainer: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    modalSubContainer: {
-        width: "90%",
-        height: "88%",
-        backgroundColor: "white",
-        borderRadius: 20,
-        paddingHorizontal: 35,
-        paddingTop: 30,
-        alignItems: "center",
-        justifyContent: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-    },
-    modalContentWrapper: {
-        flexDirection: "row",
-        flexWrap: "wrap",
+    mainContainer: {
+        flexDirection: "column",
+        justifyContent: "space-between",
         height: "100%",
-        justifyContent: "center",
-    },
-
-    closeContentWrapper: {
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        marginBottom: 10
-
+        paddingBottom: "5%"
     },
     pickerItem: {
         fontSize: 26,
         textTransform: "uppercase",
     },
-    closeButton: {
-        fontSize: 20,
+
+    createButtonWrapper: {
+        width: "70%",
+        alignSelf: "center"
     }
 })
 

@@ -1,8 +1,6 @@
 import React from 'react';
-import {AppBar, Button, Flex} from "@react-native-material/core";
+import {Flex} from "@react-native-material/core";
 import {observer} from "mobx-react";
-import {StatusBar} from "react-native";
-import authStore from "../storage/authStore";
 import {Formik} from "formik";
 import reservationsValidationSchema from "../validates/reservationsValidationSchema";
 import moment from 'moment';
@@ -25,7 +23,7 @@ const CreatingReservationScreen = () => {
     return (
         <Flex fill>
             <Header title={"New Reservation"}/>
-            <Flex>
+            <Flex style={{flex: 1}}>
                 <Formik
                     initialValues={
                         {
