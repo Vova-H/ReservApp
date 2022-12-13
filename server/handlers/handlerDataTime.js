@@ -15,12 +15,12 @@ const handlerDataTime = async (date, time) => {
 
     try {
         const reqTime = time.split(':')
+        const hours = parseInt(reqTime[0])
         if (handlerValidTime(time) === false) {
             err.push({"message": "wrong time"})
             return err
         }
-
-        if (reqTime[0] >= endOfDayArr[0] || reqTime[0] < startOfDayArr[0]
+        if (hours >= endOfDayArr[0] || hours < startOfDayArr[0]
         ) {
             err.push({"message": "make an appointment during business hours"})
         }

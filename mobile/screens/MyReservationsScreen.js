@@ -1,11 +1,12 @@
 import React, {useEffect} from 'react';
-import {FlatList, Text} from "react-native";
+import {FlatList, StyleSheet, Text} from "react-native";
 import {Button, Flex} from "@react-native-material/core";
 import {observer} from "mobx-react";
 import ReservationItem from "../components/UI/ReservationItem";
 import reservationStore from "../storage/reservationStore";
 import Header from "../components/UI/Header";
 import {useNavigation} from "@react-navigation/native";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 
 const MyReservationsScreen = () => {
@@ -29,7 +30,11 @@ const MyReservationsScreen = () => {
     }
 
     useEffect(() => {
-        fetchData().then()
+        const ac = new AbortController()
+        fetchData({signal: ac.signal}).then()
+        return () => {
+            ac.abort()
+        }
     }, [])
 
 
@@ -55,11 +60,13 @@ const MyReservationsScreen = () => {
                             />
                     }
                 </Flex>
-                <Flex>
-                    <Button title={"Create"}
-                            onPress={() => {
-                                navigation.navigate("Creating")
-                            }}
+                <Flex style={styles.buttonCreateWrapper}>
+                    <Button
+                        trailing={props => <Icon name="plus" style={styles.iconCreate} {...props} />}
+                        onPress={() => {
+                            navigation.navigate("Creating")
+                        }}
+                        style={styles.buttonCreate}
                     />
                 </Flex>
             </Flex>
@@ -67,5 +74,19 @@ const MyReservationsScreen = () => {
     );
 }
 
+
+const styles = StyleSheet.create({
+
+    buttonCreateWrapper: {
+        height: "8%"
+    },
+    buttonCreate: {
+        justifyContent: "center",
+        height: "100%",
+    },
+    iconCreate: {
+        fontSize: 40
+    }
+})
 
 export default observer(MyReservationsScreen);

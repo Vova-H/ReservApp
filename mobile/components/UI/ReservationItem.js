@@ -15,30 +15,31 @@ const ReservationItem = observer(({item, showClient}) => {
     return (
         <Flex direction={"row"} items={"center"} style={styles.itemWrapper}>
             <Flex justify={"center"}
-                  style={{paddingHorizontal: "2%", paddingVertical: "2%", marginRight: "5%", borderRightWidth: 1}}>
-                <Text>{time}</Text>
-                <Text>{date}</Text>
+                  style={styles.item}>
+                <Text style={styles.timeItem}>{time}</Text>
+                <Text style={styles.dateItem}>{date}</Text>
                 {isValidStatus === false &&
-                    <Text style={{color: "red"}}>Not Active</Text>
+                    <Text style={styles.statusItem}>Not Active</Text>
                 }
             </Flex>
 
-            <Flex direction={"column"} wrap={"wrap"} style={{width: "45%"}}>
-                <Text style={{textTransform: "uppercase", width: "100%"}}>{action}</Text>
+            <Flex direction={"column"} wrap={"wrap"} style={styles.actionWrapper}>
+                <Text style={styles.action}>{action}</Text>
                 {authStore.isAdmin && showClient ? <Text>( {client} )</Text> : null}
             </Flex>
-            <Flex style={{flexDirection: "row", justifyContent: "space-around"}}>
-                <Flex diraction={"row"} style={{width: "10%", marginRight: "2%"}}>
-                    <IconButton
-                        onPress={() => {
-                            reservationStore.editReservationItem = item
-                            navigation.navigate('Editing')
-                        }}
-                        icon={props => <Icon name="pencil" {...props} color="#5B798FFF"/>}/>
-                </Flex>
-                <Flex diraction={"row"} style={{width: "10%"}}>
+            <Flex direction={"row"} justify={"space-around"}>
+                {
+                    isValidStatus && <Flex diraction={"row"} style={styles.editIconWrapper}>
+                        <IconButton
+                            onPress={() => {
+                                reservationStore.editReservationItem = item
+                                navigation.navigate('Editing')
+                            }}
+                            icon={props => <Icon name="pencil" style={styles.icons} {...props} color="#5B798FFF"/>}/>
+                    </Flex>}
+                <Flex diraction={"row"} style={styles.deleteIconWrapper}>
                     <IconButton onPress={() => reservationStore.deleteReservation(id)}
-                                icon={props => <Icon name="trash-can" {...props} color="red"/>}/>
+                                icon={props => <Icon name="trash-can" style={styles.icons} {...props} color="red"/>}/>
                 </Flex>
             </Flex>
         </Flex>
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         marginTop: 20,
         backgroundColor: "#dcdcdc",
-        width: "100%",
+        minWidth: "100%",
         paddingVertical: "2%",
         paddingHorizontal: "3%",
         borderTopStartRadius: 30,
@@ -59,6 +60,40 @@ const styles = StyleSheet.create({
         borderTopEndRadius: 30,
         borderBottomEndRadius: 30,
         height: 120
+    },
+    item: {
+        paddingHorizontal: "2%",
+        paddingVertical: "2%",
+        marginRight: "5%",
+        borderRightWidth: 1
+    },
+    dateItem: {
+        fontSize: 15
+    },
+    timeItem: {
+        fontSize: 15
+    },
+    statusItem: {
+        color: "red",
+        fontSize: 15
+    },
+    actionWrapper: {
+        width: "45%"
+    },
+    action: {
+        textTransform: "uppercase",
+        width: "100%",
+        fontSize: 17
+    },
+    icons: {
+        fontSize: 30
+    },
+    editIconWrapper: {
+        width: "10%",
+        marginRight: "2%"
+    },
+    deleteIconWrapper: {
+        width: "10%"
     }
 })
 

@@ -3,7 +3,7 @@ import {Button, Flex} from "@react-native-material/core";
 import {StyleSheet, Text} from "react-native";
 import {Picker} from "@react-native-picker/picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import reservationStore from "../storage/reservationStore";
 import TimeItem from "./UI/TimeItem";
 import CheckingWorkingTimeModal from "./CheckingWorkingTimeModal";
@@ -129,6 +129,8 @@ const MyFormCreatingScreen = props => {
             <Flex style={styles.createButtonWrapper}>
                 <Button title="Create"
                         onPress={handleSubmit}
+                        style={styles.createButton}
+                        titleStyle={{fontSize: 17, letterSpacing: 4}}
                 />
             </Flex>
 
@@ -155,7 +157,13 @@ const styles = StyleSheet.create({
 
     createButtonWrapper: {
         width: "70%",
-        alignSelf: "center"
+        alignSelf: "center",
+        justifyContent: "center",
+        height: "100%"
+    },
+    createButton: {
+        height: "8%",
+        justifyContent: "center"
     }
 })
 

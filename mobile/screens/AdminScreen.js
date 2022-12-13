@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
 import {Button, Flex} from "@react-native-material/core";
 import {observer} from "mobx-react";
-import {FlatList, StyleSheet, Text} from "react-native";
+import {StyleSheet} from "react-native";
 import adminStore from "../storage/adminStore";
 import {runInAction} from "mobx";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
 import ReservationItem from "../components/UI/ReservationItem";
 import UserItem from "../components/UI/UserItem";
 import Header from "../components/UI/Header";
+import TimeProperties from "../components/AdminComponents/TimeProperties";
+import AllReservations from "../components/AdminComponents/AllReservations";
+import RegisteredUsers from "../components/AdminComponents/RegisteredUsers";
 
 
 const AdminScreen = () => {
@@ -15,7 +17,6 @@ const AdminScreen = () => {
     const [showAllReservations, setShowAllReservations] = useState(false)
     const [showAllUsers, setShowAllUsers] = useState(false)
     const [showTimeProperty, setShowTimeProperty] = useState(false)
-
 
     const [isStartOfDayTimePickerVisible, setStartOfDayTimePickerVisible] = useState(false);
     const [isEndOfDayTimePickerVisible, setEndOfDayTimePickerVisible] = useState(false);
@@ -72,60 +73,27 @@ const AdminScreen = () => {
             <Header title={"Admin Page"}/>
             {
                 showTimeProperty ?
-                    <Flex>
-                        <Flex items={"center"} justify={"center"} style={{height: "70%"}}>
-                            <Flex>
-                                <Text onPress={showStartOfDayPicker}>{adminStore.startOfDay}</Text>
-                                <DateTimePickerModal
-                                    isVisible={isStartOfDayTimePickerVisible}
-                                    mode="time"
-                                    minuteInterval={30}
-                                    onConfirm={handleStartOfDayConfirm}
-                                    onCancel={hideStartOfDayPicker}
-                                />
-                            </Flex>
-                            <Flex style={{marginBottom: 10}}>
-                                <Text onPress={showEndOfDayPicker}>{adminStore.endOfDay}</Text>
-                                <DateTimePickerModal
-                                    isVisible={isEndOfDayTimePickerVisible}
-                                    mode="time"
-                                    minuteInterval={30}
-                                    onConfirm={handleEndOfDayConfirm}
-                                    onCancel={hideEndOfDayPicker}
-                                />
-                            </Flex>
-                            <Button title="Save changes" color="green" onPress={() => {
-                                updateWorkingTime(
-                                    {
-                                        startOfDay: adminStore.startOfDay,
-                                        endOfDay: adminStore.endOfDay
-                                    }
-                                ).then((res) => {
-                                    alert(res[0].message)
-                                    setShowTimeProperty(false)
-                                })
-                            }}/>
-                        </Flex>
-                    </Flex> : null
+                    <TimeProperties showStartOfDayPicker={showStartOfDayPicker}
+                                    isStartOfDayTimePickerVisible={isStartOfDayTimePickerVisible}
+                                    handleStartOfDayConfirm={handleStartOfDayConfirm}
+                                    hideStartOfDayPicker={hideStartOfDayPicker}
+                                    showEndOfDayPicker={showEndOfDayPicker}
+                                    isEndOfDayTimePickerVisible={isEndOfDayTimePickerVisible}
+                                    handleEndOfDayConfirm={handleEndOfDayConfirm}
+                                    hideEndOfDayPicker={hideEndOfDayPicker}
+                                    updateWorkingTime={updateWorkingTime}
+                    /> : null
             }
 
             {
                 showAllReservations ?
-                    <Flex items={"center"} justify={"center"} style={{height: "70%"}}>
-                        <FlatList data={adminStore.allReservations}
-                                  renderItem={renderAllReservations}
-                                  keyExtractor={(item) => item.id}
-                        />
-                    </Flex> : null
+                    <AllReservations
+                        renderAllReservations={renderAllReservations}
+                    /> : null
             }
             {
                 showAllUsers ?
-                    <Flex items={"center"} justify={"center"} style={{height: "70%"}}>
-                        <FlatList data={adminStore.allUsers}
-                                  renderItem={renderAllUsers}
-                                  keyExtractor={(item) => item.id}
-                        />
-                    </Flex> : null
+                    <RegisteredUsers renderAllUsers={renderAllUsers}/> : null
             }
 
             <Flex>

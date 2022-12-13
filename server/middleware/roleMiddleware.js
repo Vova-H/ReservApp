@@ -9,11 +9,7 @@ export default function (roles) {
             const token = handlerGetToken(req)
             const {roles: userRoles} = jsonwebtoken.verify(token, secret)
             let hasRole = false
-            if (typeof userRoles === "string")
-                if (userRoles.includes(roles)) {
-                    hasRole = true
-                }
-            if (typeof userRoles === "object") userRoles.forEach(role => {
+            userRoles.forEach(role => {
                 if (roles.includes(role)) {
                     hasRole = true
                 }

@@ -6,7 +6,6 @@ export default function (req, res, next) {
 
     try {
         const token = handlerGetToken(req)
-
         if (!token || token === "" || token === undefined) {
             return res.status(403).json({"message": "User not authorized"})
         }

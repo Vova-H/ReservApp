@@ -130,6 +130,8 @@ const MyFormUpdatingScreen = props => {
             <Flex style={styles.updateButtonWrapper}>
                 <Button title="Update"
                         onPress={handleSubmit}
+                        style={styles.updateButton}
+                        titleStyle={{fontSize: 17, letterSpacing: 4}}
                 />
             </Flex>
 
@@ -156,7 +158,13 @@ const styles = StyleSheet.create({
 
     updateButtonWrapper: {
         width: "70%",
-        alignSelf: "center"
+        height:"100%",
+        alignSelf: "center",
+        justifyContent: "center",
+    },
+    updateButton: {
+        height: "8%",
+        justifyContent: "center"
     }
 })
 

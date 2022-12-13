@@ -2,6 +2,7 @@ import React from 'react';
 import {Flex} from "@react-native-material/core";
 import {StyleSheet, Text} from "react-native";
 import {observer} from "mobx-react";
+import moment from "moment/moment";
 
 const UserItem = ({item}) => {
 
@@ -21,7 +22,7 @@ const UserItem = ({item}) => {
             </Flex>
             <Flex>
                 <Text>
-                    Registered: {createdAt}
+                    Registered: {moment(createdAt).format("YYYY-MM-DD")}
                 </Text>
             </Flex>
         </Flex>

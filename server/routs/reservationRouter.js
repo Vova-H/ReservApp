@@ -6,7 +6,6 @@ import IdReqMiddleware from "../middleware/idReqMiddleware.js";
 
 const reservationRouter = new Router()
 
-
 reservationRouter.get('/reservation',
     authMiddleware,
     tryCatchMiddleware(ReservationController.index.bind(ReservationController)))
