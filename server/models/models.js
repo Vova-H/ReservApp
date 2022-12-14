@@ -5,9 +5,10 @@ export const User = sequelize.define('user', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     name: {type: DataTypes.STRING, require: true},
     surname: {type: DataTypes.STRING, require: true},
+    phone: {type: DataTypes.STRING, require: true},
     email: {type: DataTypes.STRING, unique: true},
-    password: {type: DataTypes.STRING},
-    roles: {type: DataTypes.ARRAY(DataTypes.STRING)}
+    password: {type: DataTypes.STRING, require: true},
+    roles: {type: DataTypes.ARRAY(DataTypes.STRING), require: true}
 })
 
 export const Reservation = sequelize.define('reservation', {

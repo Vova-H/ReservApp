@@ -2,11 +2,18 @@ import {Reservation, Time, User} from "../models/models.js";
 import handlerDataTime from "../handlers/handlerDataTime.js";
 import handlerCheckActivity from "../handlers/handlerCheckActivity.js";
 import handlerShowTimes from "../handlers/handlerShowTimes.js";
+import handlerConvertTime from "../handlers/handlerConvertTime.js";
 
 
 export default class ReservationService {
     async index(id) {
-        const reservations = await Reservation.findAll({where: {userId: id}})
+        const reservations = await Reservation.findAll({
+            where: {userId: id},
+            order: [
+                ["date", "ASC"],
+                ["time", "ASC"]
+            ]
+        })
         reservations.map(el => {
             el.isValidStatus = handlerCheckActivity(el)
             el.save()
@@ -20,6 +27,7 @@ export default class ReservationService {
         if (result.length !== 0) {
             return {'errors': result}
         }
+        time = handlerConvertTime(time)
         const reservation = await Reservation.create({
             date,
             time,
@@ -38,6 +46,10 @@ export default class ReservationService {
         const {endOfDay} = await Time.findOne()
 
         const allWorkingTime = handlerShowTimes(startOfDay, endOfDay)
+        const allWorkingTimeConverted = []
+        allWorkingTime.map(el => {
+            allWorkingTimeConverted.push(handlerConvertTime(el))
+        })
         const busyTimes = []
         const data = await Reservation.findAll({
             where: {
@@ -50,7 +62,7 @@ export default class ReservationService {
         })
 
         const checkedTime = []
-        allWorkingTime.map((time, index) => {
+        allWorkingTimeConverted.map((time, index) => {
             checkedTime.push({time: time, isFree: true})
             busyTimes.map((busyTime) => {
                 if (time === busyTime) {

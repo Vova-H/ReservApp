@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import generateAccessToken from "../handlers/handlerGenerateAccessToken.js";
 
 export default class AuthServices {
-    async registration(name, surname, email, password) {
+    async registration(name, surname, phone, email, password) {
         const candidate = await User.findOne({where: {email: `${email}`}})
 
         if (candidate) {
@@ -11,7 +11,7 @@ export default class AuthServices {
         }
         const hashPassword = await bcrypt.hashSync(password, 7)
         const roles = ["USER"]
-        const user = await User.create({name, surname, email, password: hashPassword, roles: roles})
+        const user = await User.create({name, surname, phone, email, password: hashPassword, roles: roles})
         await user.save()
         return {"message": "The user has been successfully registered"}
     }

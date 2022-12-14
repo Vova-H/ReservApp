@@ -1,5 +1,5 @@
 import jsonwebtoken from "jsonwebtoken";
-import secret from "../config.js"
+import secret from "../sign.js"
 import handlerGetToken from "../handlers/handlerGetToken.js";
 
 export default function (req, res, next) {

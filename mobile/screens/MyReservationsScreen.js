@@ -12,7 +12,6 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 const MyReservationsScreen = () => {
 
     const navigation = useNavigation()
-
     const fetchData = async () => {
         try {
             return await reservationStore.getReservations()

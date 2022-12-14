@@ -6,7 +6,7 @@ import moment from "moment/moment";
 
 const UserItem = ({item}) => {
 
-    const {name, surname, email, createdAt} = item
+    const {name, surname, phone, email, createdAt} = item
 
     return (
         <Flex style={styles.itemWrapper}>
@@ -20,6 +20,13 @@ const UserItem = ({item}) => {
                     Email: {email}
                 </Text>
             </Flex>
+
+            <Flex>
+                <Text>
+                    Phone: {phone}
+                </Text>
+            </Flex>
+
             <Flex>
                 <Text>
                     Registered: {moment(createdAt).format("YYYY-MM-DD")}

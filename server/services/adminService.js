@@ -8,7 +8,12 @@ export default class AdminService {
     }
 
     async getAllReservations() {
-        const reservations = await Reservation.findAll()
+        const reservations = await Reservation.findAll({
+            order: [
+                ["date", "ASC"],
+                ["time", "ASC"]
+            ]
+        })
         reservations.map(el => {
             el.isValidStatus = handlerCheckActivity(el)
             el.save()

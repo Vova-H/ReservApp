@@ -8,6 +8,7 @@ const authRouter = new Router()
 authRouter.post('/registration', [
     check('name', "Name cannot be empty").notEmpty({ignore_whitespace: true}),
     check('surname', "Last name cannot be empty").notEmpty({ignore_whitespace: true}),
+    check('phone', "invalid phone number").notEmpty({ignore_whitespace: true}),
     check('password', "Password cannot be an empty string").notEmpty({ignore_whitespace: true}),
     check('password', "Password must be at least 4 characters").isLength({min: 4, max: 15}),
     check('email', "Invalid email entered").isEmail()

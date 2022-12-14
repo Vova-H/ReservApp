@@ -1,4 +1,3 @@
-import {QueryClient, QueryClientProvider} from "react-query";
 import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import RegisterScreen from "./screens/RegisterScreen";
@@ -14,11 +13,9 @@ import AdminScreen from "./screens/AdminScreen";
 
 export default function App() {
 
-    const queryClient = new QueryClient()
     const Stack = createNativeStackNavigator();
 
     return (
-        <QueryClientProvider client={queryClient}>
             <IconComponentProvider IconComponent={MaterialCommunityIcons}>
                 <NavigationContainer>
                     <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="LoginScreen">
@@ -31,7 +28,6 @@ export default function App() {
                     </Stack.Navigator>
                 </NavigationContainer>
             </IconComponentProvider>
-        </QueryClientProvider>
     );
 }
 

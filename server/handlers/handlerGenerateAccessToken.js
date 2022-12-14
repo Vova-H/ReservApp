@@ -1,5 +1,5 @@
 import jsonwebtoken from "jsonwebtoken";
-import secret from "../config.js";
+import secret from "../sign.js";
 
 const generateAccessToken = (id, roles) => {
     const payload = {

@@ -1,5 +1,5 @@
 import jsonwebtoken from "jsonwebtoken";
-import secret from "../config.js";
+import secret from "../sign.js";
 import ReservationService from "../services/reservationService.js";
 import handlerGetToken from "../handlers/handlerGetToken.js";
 

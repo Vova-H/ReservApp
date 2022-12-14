@@ -1,5 +1,7 @@
 import {makeAutoObservable, runInAction} from "mobx";
 import auth from "./authStore";
+import {Alert} from "react-native";
+import handlerConvertTime from "../handlers/handlerConvertTime";
 
 class ReservationStore {
 
@@ -59,6 +61,7 @@ class ReservationStore {
         if (!data.errors) {
             runInAction(() => {
                 this.reservations = [...this.reservations, data]
+                this.reservations.sort((a, b) => (a.date + a.time > b.date + b.time) ? 1 : -1)
             })
         } else {
             data.errors.map((error) => {
@@ -79,17 +82,21 @@ class ReservationStore {
             body: JSON.stringify(reservation)
         })
         const data = await response.json()
-
+        if (data[1].time)
         if (!data.errors) {
             runInAction(() => {
                 this.reservations.map((el) => {
                     if (el.id === id) {
                         el.action = data[1].action
                         el.date = data[1].date
-                        el.time = data[1].time
+                        el.time = handlerConvertTime(data[1].time)
                     }
                 })
+                this.reservations.sort((a, b) => (a.date + a.time > b.date + b.time) ? 1 : -1)
             })
+        }
+        else {
+            Alert.alert("Error updating", data.errors)
         }
 
         return data
@@ -108,6 +115,7 @@ class ReservationStore {
         await fetch(`http://10.0.2.2:5000/api/reservation/${id}`, requestOptions)
         runInAction(() => {
             this.reservations = this.reservations.filter((item) => item.id !== id)
+            this.reservations.sort((a, b) => (a.date + a.time > b.date + b.time) ? 1 : -1)
         })
     }
 }

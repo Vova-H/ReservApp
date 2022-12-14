@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    Alert,
     ImageBackground,
     Keyboard,
     KeyboardAvoidingView,
@@ -17,6 +18,7 @@ import {observer} from "mobx-react";
 
 const RegisterScreen = (({navigation}) => {
 
+
     return (
         <View style={styles.container}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -28,30 +30,45 @@ const RegisterScreen = (({navigation}) => {
                     <View style={styles.wrapper}>
                         <KeyboardAvoidingView behavior={"height"}>
                             <Formik
-                                initialValues={{name: '', surname: '', email: '', password: ''}}
+                                initialValues={{name: '', surname: '', email: '', password: '', phone: ''}}
                                 validationSchema={registrationValidationSchema}
                                 onSubmit={async (values, actions) => {
-                                    await authStore.registration(values)
+                                    const res = await authStore.registration(values)
+                                    Alert.alert("Registration", res.message)
                                     actions.resetForm()
                                     navigation.navigate('Login')
                                 }}
                             >
                                 {(props) => (
                                     <View>
-
                                         <Text style={styles.label}>Name</Text>
                                         <TextInput style={styles.input} value={props.values.name}
                                                    onChangeText={props.handleChange('name')}
                                                    onBlur={props.handleBlur('name')}
                                         ></TextInput>
                                         <Text style={styles.textError}>{props.touched.name && props.errors.name}</Text>
+
+
                                         <Text style={styles.label}>Surname</Text>
                                         <TextInput style={styles.input} value={props.values.surname}
                                                    onChangeText={props.handleChange('surname')}
                                                    onBlur={props.handleBlur('surname')}
                                         ></TextInput>
-                                        <Text
-                                            style={styles.textError}>{props.touched.surname && props.errors.surname}</Text>
+                                        <Text style={styles.textError}>
+                                            {props.touched.surname && props.errors.surname}
+                                        </Text>
+
+
+                                        <Text style={styles.label}>Phone number</Text>
+                                        <TextInput style={styles.input} value={props.values.phone}
+                                                   keyboardType={"phone-pad"}
+                                                   onBlur={props.handleBlur('phone')}
+                                                   onChangeText={props.handleChange('phone')}
+                                        />
+                                        <Text style={styles.textError}>
+                                            {props.touched.phone && props.errors.phone}
+                                        </Text>
+
                                         <Text style={styles.label}>Email</Text>
                                         <TextInput style={styles.input} value={props.values.email}
                                                    onChangeText={props.handleChange('email')}
@@ -59,6 +76,7 @@ const RegisterScreen = (({navigation}) => {
                                                    onBlur={props.handleBlur('email')}
 
                                         ></TextInput>
+
                                         <Text
                                             style={styles.textError}>{props.touched.email && props.errors.email}</Text>
                                         <Text style={styles.label}>Password</Text>
@@ -78,8 +96,9 @@ const RegisterScreen = (({navigation}) => {
                                                     props.handleSubmit()
                                                 }}/>
                                         <View style={styles.wrapperGoTo}>
-                                            <Text style={[styles.label, {fontSize: 24}]}>Already have an account
-                                                ?</Text>
+                                            <Text style={[styles.label, {fontSize: 24}]}>
+                                                Already have an account ?
+                                            </Text>
                                             <Button title={"Go To Login"}
                                                     color={'#000'}
                                                     paddingVertical={7}

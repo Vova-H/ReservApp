@@ -18,6 +18,9 @@ const creatingTime = () => {
     if (minutes.length === 1) {
         minutes = "0" + minutes.toString()
     }
+    if (hours.length === 1) {
+        hours = "0" + hours.toString()
+    }
     return hours + ":" + minutes
 }
 
