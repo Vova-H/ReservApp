@@ -1,7 +1,7 @@
 import React from 'react';
 import {Flex, Icon, IconButton} from "@react-native-material/core";
 import {Modal, StyleSheet, Text} from "react-native";
-import reservationStore from "../storage/reservationStore";
+import reservationStore from "../../storage/reservationStore";
 
 const CheckingWorkingTimeModal = ({isAvailableTime, setIsAvailableTime, renderWorkingTime}) => {
     return (

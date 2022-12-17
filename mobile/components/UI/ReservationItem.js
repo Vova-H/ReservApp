@@ -1,48 +1,64 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Flex, IconButton} from "@react-native-material/core";
-import {StyleSheet, Text} from "react-native";
+import {StyleSheet, Text, TouchableWithoutFeedback} from "react-native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import reservationStore from "../../storage/reservationStore";
 import {observer} from "mobx-react";
 import {useNavigation} from "@react-navigation/native";
 import authStore from "../../storage/authStore";
+import InfoClientModal from "../modalComponents/InfoClientModal";
 
 const ReservationItem = observer(({item, showClient}) => {
     const navigation = useNavigation()
 
     const {isValidStatus, action, date, time, client, id} = item
+    const [isClientInfo, setIsClientInfo] = useState(false)
 
     return (
-        <Flex direction={"row"} items={"center"} style={styles.itemWrapper}>
-            <Flex justify={"center"}
-                  style={styles.item}>
-                <Text style={styles.timeItem}>{time}</Text>
-                <Text style={styles.dateItem}>{date}</Text>
-                {isValidStatus === false &&
-                    <Text style={styles.statusItem}>Not Active</Text>
-                }
-            </Flex>
+        <>
+            <TouchableWithoutFeedback delayLongPress="1000" onLongPress={() => setIsClientInfo(!isClientInfo)}>
+                <Flex direction={"row"} items={"center"} style={styles.itemWrapper}>
+                    <Flex justify={"center"}
+                          style={styles.item}>
+                        <Text style={styles.timeItem}>{time}</Text>
+                        <Text style={styles.dateItem}>{date}</Text>
+                        {isValidStatus === false &&
+                            <Text style={styles.statusItem}>Not Active</Text>
+                        }
+                    </Flex>
 
-            <Flex direction={"column"} wrap={"wrap"} style={styles.actionWrapper}>
-                <Text style={styles.action}>{action}</Text>
-                {authStore.isAdmin && showClient ? <Text>( {client} )</Text> : null}
-            </Flex>
-            <Flex direction={"row"} justify={"space-around"}>
-                {
-                    isValidStatus && <Flex diraction={"row"} style={styles.editIconWrapper}>
-                        <IconButton
-                            onPress={() => {
-                                reservationStore.editReservationItem = item
-                                navigation.navigate('Editing')
-                            }}
-                            icon={props => <Icon name="pencil" style={styles.icons} {...props} color="#5B798FFF"/>}/>
-                    </Flex>}
-                <Flex diraction={"row"} style={styles.deleteIconWrapper}>
-                    <IconButton onPress={() => reservationStore.deleteReservation(id)}
-                                icon={props => <Icon name="trash-can" style={styles.icons} {...props} color="red"/>}/>
+                    <Flex direction={"column"} wrap={"wrap"} style={styles.actionWrapper}>
+                        <Text style={styles.action}>{action}</Text>
+                        {authStore.isAdmin && showClient ? <Text>( {client[0]} {client[1]} )</Text> : null}
+                    </Flex>
+                    <Flex direction={"row"} justify={"space-around"}>
+                        {
+                            isValidStatus && <Flex diraction={"row"} style={styles.editIconWrapper}>
+                                <IconButton
+                                    onPress={() => {
+                                        reservationStore.editReservationItem = item
+                                        navigation.navigate('Editing')
+                                    }}
+                                    icon={props => <Icon name="pencil" style={styles.icons} {...props}
+                                                         color="#5B798FFF"/>}/>
+                            </Flex>}
+                        <Flex diraction={"row"} style={styles.deleteIconWrapper}>
+                            <IconButton onPress={() => reservationStore.deleteReservation(id)}
+                                        icon={props => <Icon name="trash-can" style={styles.icons} {...props}
+                                                             color="red"/>}/>
+                        </Flex>
+                    </Flex>
                 </Flex>
-            </Flex>
-        </Flex>
+            </TouchableWithoutFeedback>
+
+            {isClientInfo && authStore.isAdmin ?
+                <InfoClientModal
+                    isClientInfo={isClientInfo}
+                    setIsClientInfo={setIsClientInfo}
+                    item={item}
+                /> : null
+            }
+        </>
     )
 })
 

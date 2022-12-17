@@ -6,7 +6,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {useEffect, useState} from "react";
 import TimeItem from "./UI/TimeItem";
 import reservationStore from "../storage/reservationStore";
-import CheckingWorkingTimeModal from "./CheckingWorkingTimeModal";
+import CheckingWorkingTimeModal from "./modalComponents/CheckingWorkingTimeModal";
 
 const MyFormUpdatingScreen = props => {
     const {handleSubmit, values, setFieldValue, oldDay} = props;

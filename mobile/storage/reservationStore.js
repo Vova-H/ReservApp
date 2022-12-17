@@ -65,7 +65,7 @@ class ReservationStore {
             })
         } else {
             data.errors.map((error) => {
-                alert(error.message)
+                Alert.alert("Error of creating", error.message)
             })
         }
         return data
@@ -82,22 +82,21 @@ class ReservationStore {
             body: JSON.stringify(reservation)
         })
         const data = await response.json()
-        if (data[1].time)
-        if (!data.errors) {
-            runInAction(() => {
-                this.reservations.map((el) => {
-                    if (el.id === id) {
-                        el.action = data[1].action
-                        el.date = data[1].date
-                        el.time = handlerConvertTime(data[1].time)
-                    }
+        if (data[1] && data[1].time)
+            if (!data.errors) {
+                runInAction(() => {
+                    this.reservations.map((el) => {
+                        if (el.id === id) {
+                            el.action = data[1].action
+                            el.date = data[1].date
+                            el.time = handlerConvertTime(data[1].time)
+                        }
+                    })
+                    this.reservations.sort((a, b) => (a.date + a.time > b.date + b.time) ? 1 : -1)
                 })
-                this.reservations.sort((a, b) => (a.date + a.time > b.date + b.time) ? 1 : -1)
-            })
-        }
-        else {
-            Alert.alert("Error updating", data.errors)
-        }
+            } else {
+                Alert.alert("Error updating", data.errors)
+            }
 
         return data
     }

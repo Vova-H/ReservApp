@@ -6,7 +6,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import React, {useEffect, useState} from "react";
 import reservationStore from "../storage/reservationStore";
 import TimeItem from "./UI/TimeItem";
-import CheckingWorkingTimeModal from "./CheckingWorkingTimeModal";
+import CheckingWorkingTimeModal from "./modalComponents/CheckingWorkingTimeModal";
 
 const MyFormCreatingScreen = props => {
     const {handleSubmit, values, setFieldValue} = props;
@@ -16,7 +16,7 @@ const MyFormCreatingScreen = props => {
     const [day, setDay] = useState(moment(Date.now()).format('YYYY-MM-DD'))
 
     useEffect(() => {
-        fetchTime()
+        fetchTime().then()
     }, [day])
 
     const fetchTime = async () => {

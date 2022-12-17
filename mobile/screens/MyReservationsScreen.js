@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {FlatList, StyleSheet, Text} from "react-native";
+import {Alert, FlatList, StyleSheet, Text} from "react-native";
 import {Button, Flex} from "@react-native-material/core";
 import {observer} from "mobx-react";
 import ReservationItem from "../components/UI/ReservationItem";
@@ -19,10 +19,10 @@ const MyReservationsScreen = () => {
             navigation.navigate('Login')
             switch (e.response.status) {
                 case 404 :
-                    alert('Page not found')
+                    Alert.alert("Error 404", 'Page not found')
                     break;
                 case 403:
-                    alert('Access forbidden')
+                    alert("Error 403", 'Access forbidden')
                     break
             }
         }

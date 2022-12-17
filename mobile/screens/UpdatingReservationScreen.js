@@ -7,6 +7,7 @@ import reservationStore from "../storage/reservationStore";
 import {useNavigation} from "@react-navigation/native";
 import MyFormUpdatingScreen from "../components/MyFormUpdatingScreen";
 import Header from "../components/UI/Header";
+import {Alert} from "react-native";
 
 const UpdatingReservationScreen = observer(() => {
 
@@ -18,10 +19,10 @@ const UpdatingReservationScreen = observer(() => {
             const data = await reservationStore.updateReservation(id, values)
             if (data.errors) {
                 data.errors.map((el) => {
-                    alert(el.message)
+                    Alert.alert("Updating Error", el.message)
                 })
             } else {
-                alert("Your reservation was updating successfully")
+                Alert.alert("Successfully Updating", "Your reservation was updating successfully")
             }
             navigation.navigate('MyReservations')
             return data[1]

@@ -9,35 +9,31 @@ const UserItem = ({item}) => {
     const {name, surname, phone, email, createdAt} = item
 
     return (
-        <Flex style={styles.itemWrapper}>
-            <Flex>
-                <Text>
-                    Client: {name} {surname}
-                </Text>
+        <Flex style={styles.userWrapper}>
+            <Flex style={styles.itemWrapper}>
+                <Text style={styles.itemLabel}>Client: </Text>
+                <Text style={styles.item}>{name} {surname}</Text>
             </Flex>
-            <Flex>
-                <Text>
-                    Email: {email}
-                </Text>
+            <Flex style={styles.itemWrapper}>
+                <Text style={styles.itemLabel}>Email: </Text>
+                <Text style={styles.item}>{email}</Text>
             </Flex>
 
-            <Flex>
-                <Text>
-                    Phone: {phone}
-                </Text>
+            <Flex style={styles.itemWrapper}>
+                <Text style={styles.itemLabel}>Phone: </Text>
+                <Text style={styles.item}>{phone}</Text>
             </Flex>
 
-            <Flex>
-                <Text>
-                    Registered: {moment(createdAt).format("YYYY-MM-DD")}
-                </Text>
+            <Flex style={styles.itemWrapper}>
+                <Text style={styles.itemLabel}>Registered: </Text>
+                <Text style={styles.item}>{moment(createdAt).format("YYYY-MM-DD")}</Text>
             </Flex>
         </Flex>
     )
 }
 
 const styles = StyleSheet.create({
-    itemWrapper: {
+    userWrapper: {
         minWidth: "98%",
         marginBottom: 20,
         marginTop: 20,
@@ -46,6 +42,18 @@ const styles = StyleSheet.create({
         backgroundColor: "#dcdcdc",
         paddingVertical: "2%",
         paddingLeft: "5%"
+    },
+    itemWrapper: {
+        flexDirection: "row",
+        alignItems:"center"
+    },
+    itemLabel: {
+        fontSize: 16,
+        textTransform: "uppercase"
+    },
+    item: {
+        fontSize: 20,
+        textDecorationLine: "underline",
     }
 })
 

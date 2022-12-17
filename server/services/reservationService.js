@@ -8,6 +8,7 @@ import handlerConvertTime from "../handlers/handlerConvertTime.js";
 export default class ReservationService {
     async index(id) {
         const reservations = await Reservation.findAll({
+            include: {model: User, required: true},
             where: {userId: id},
             order: [
                 ["date", "ASC"],

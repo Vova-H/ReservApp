@@ -9,6 +9,7 @@ export default class AdminService {
 
     async getAllReservations() {
         const reservations = await Reservation.findAll({
+            include: {model: User, required: true},
             order: [
                 ["date", "ASC"],
                 ["time", "ASC"]

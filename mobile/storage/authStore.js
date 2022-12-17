@@ -1,4 +1,5 @@
 import {makeAutoObservable, runInAction} from "mobx";
+import {Alert} from "react-native";
 
 
 class AuthStore {
@@ -33,7 +34,7 @@ class AuthStore {
         })
         const data = await response.json()
         if (data.message) {
-            alert(data.message)
+            Alert.alert("Login Error", data.message)
         } else {
             const token = data[0]
             runInAction(() => {
