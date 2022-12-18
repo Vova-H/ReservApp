@@ -1,6 +1,6 @@
 import moment from "moment/moment";
 import {Button, Flex} from "@react-native-material/core";
-import {StyleSheet, Text} from "react-native";
+import {StyleSheet, Text, TouchableOpacity} from "react-native";
 import {Picker} from "@react-native-picker/picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import React, {useEffect, useState} from "react";
@@ -78,30 +78,38 @@ const MyFormCreatingScreen = props => {
         <Flex style={styles.mainContainer}>
             <Flex>
                 <Flex>
-                    <Text onPress={showDatePicker}
-                          style={{fontSize: 40, textAlign: "center", marginBottom: "5%", marginTop: "10%"}}
-                    >{moment(values.date).format('YYYY-MM-DD')}</Text>
-                    <Text onPress={showTimePicker}
-                          style={{fontSize: 40, textAlign: "center", marginBottom: "5%"}}
-                    >{values.time} </Text>
-                    <Picker
-                        selectedValue={values.action}
-                        onValueChange={async (itemValue, itemIndex) => {
-                            await handleAction(itemValue)
-                        }}
-                        style={{
-                            width: "80%",
-                            justifyContent: "center",
-                            alignSelf: "center",
-                        }}
-                    >
-                        <Picker.Item style={styles.pickerItem} label="to open sick list" value="to open sick list"/>
-                        <Picker.Item style={styles.pickerItem} label="to get analyses" value="to get analyses"/>
-                        <Picker.Item style={styles.pickerItem} label="to make a declaration"
-                                     value="to make a declaration"/>
-                        <Picker.Item style={styles.pickerItem} label="to get prescription for painkillers"
-                                     value="to get prescription for painkillers"/>
-                    </Picker>
+                    <TouchableOpacity style={styles.datePickerWrapper} onPress={showDatePicker}>
+                        <Text style={styles.datePicker}>
+                            {moment(values.date).format('YYYY-MM-DD')}
+                        </Text>
+                        <Text style={styles.timeSubtitle}>Click here to change day</Text>
+                    </TouchableOpacity>
+
+
+                    <TouchableOpacity style={styles.timePickerWrapper} onPress={showTimePicker}>
+                        <Text style={styles.timePicker}>
+                            {values.time}
+                        </Text>
+                        <Text style={styles.timeSubtitle}>Click here to change time</Text>
+                    </TouchableOpacity>
+
+                    <Flex style={styles.pickerWrapper}>
+                        <Picker
+                            selectedValue={values.action}
+                            onValueChange={async (itemValue, itemIndex) => {
+                                await handleAction(itemValue)
+                            }}
+                            style={styles.picker}
+                        >
+
+                            <Picker.Item style={styles.pickerItem} label="To open sick list" value="To open sick list"/>
+                            <Picker.Item style={styles.pickerItem} label="To get analyses" value="To get analyses"/>
+                            <Picker.Item style={styles.pickerItem} label="To make a declaration"
+                                         value="To make a declaration"/>
+                            <Picker.Item style={styles.pickerItem} label="To get prescription"
+                                         value="To get prescription"/>
+                        </Picker>
+                    </Flex>
                     <DateTimePickerModal
                         isVisible={isDatePickerVisible}
                         mode="date"
@@ -113,26 +121,32 @@ const MyFormCreatingScreen = props => {
                     <DateTimePickerModal
                         isVisible={isTimePickerVisibility}
                         mode="time"
+                        is24Hour={false}
                         onConfirm={handleTimeConfirm}
                         onCancel={hideTimePicker}
                         data={values.time}
                         minuteInterval={15}
                     />
                 </Flex>
-                <Text style={{fontSize: 24, marginVertical: 10}}
-                      onPress={() => {
-                          setIsAvailableTime(!isAvailableTime)
-                      }}>
-                    Click here to check available time...
-                </Text>
+
+
+                <Flex style={styles.availableTimeLabelWrapper}>
+                    <Text style={styles.availableTimeLabel}
+                          onPress={() => {
+                              setIsAvailableTime(!isAvailableTime)
+                          }}>
+                        Check available time
+                    </Text>
+                </Flex>
             </Flex>
             <Flex style={styles.createButtonWrapper}>
                 <Button title="Create"
                         onPress={handleSubmit}
                         style={styles.createButton}
-                        titleStyle={{fontSize: 17, letterSpacing: 4}}
+                        titleStyle={styles.createButtonTitle}
                 />
             </Flex>
+
 
             <CheckingWorkingTimeModal isAvailableTime={isAvailableTime}
                                       setIsAvailableTime={setIsAvailableTime}
@@ -145,25 +159,67 @@ const MyFormCreatingScreen = props => {
 
 const styles = StyleSheet.create({
     mainContainer: {
-        flexDirection: "column",
-        justifyContent: "space-between",
         height: "100%",
+        justifyContent: "space-between",
         paddingBottom: "5%"
+    },
+    datePickerWrapper: {
+        marginTop: "10%"
+    },
+    datePicker: {
+        fontSize: 50,
+        fontWeight: "400",
+        textAlign: "center",
+    },
+    dateSubtitle: {
+        marginBottom: "10%",
+    },
+    timePickerWrapper: {},
+    timePicker: {
+        fontSize: 50,
+        fontWeight: "400",
+        textAlign: "center",
+    },
+    timeSubtitle: {
+        marginBottom: "10%",
+        textAlign: "center",
+        opacity: 0.4
+    },
+    pickerWrapper: {
+        borderWidth: 1,
+        borderRadius: 40,
+        marginBottom: "15%"
+    },
+    picker: {
+        width: "80%",
+        justifyContent: "center",
+        alignSelf: "center",
     },
     pickerItem: {
         fontSize: 26,
-        textTransform: "uppercase",
+        borderStyle: "solid"
     },
-
+    availableTimeLabelWrapper: {
+        paddingHorizontal: "5%",
+    },
+    availableTimeLabel: {
+        fontSize: 30,
+        marginVertical: 10,
+        textAlign: "center",
+        textDecorationLine: "underline"
+    },
     createButtonWrapper: {
         width: "70%",
         alignSelf: "center",
         justifyContent: "center",
-        height: "100%"
     },
     createButton: {
-        height: "8%",
-        justifyContent: "center"
+        justifyContent: "center",
+        paddingVertical: "5%"
+    },
+    createButtonTitle: {
+        fontSize: 17,
+        letterSpacing: 4,
     }
 })
 

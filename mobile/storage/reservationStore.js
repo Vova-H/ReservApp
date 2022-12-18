@@ -2,6 +2,7 @@ import {makeAutoObservable, runInAction} from "mobx";
 import auth from "./authStore";
 import {Alert} from "react-native";
 import handlerConvertTime from "../handlers/handlerConvertTime";
+import Config from "../config";
 
 class ReservationStore {
 
@@ -14,7 +15,7 @@ class ReservationStore {
     }
 
     async getReservations() {
-        const response = await fetch('http://10.0.2.2:5000/api/reservation', {
+        const response = await fetch(`http://${Config.ip}:${Config.port}/api/reservation`, {
             headers: {
                 Authorization: `Bearer ${auth.token}`,
                 Accept: 'application/json',
@@ -29,7 +30,7 @@ class ReservationStore {
     }
 
     async getAvailableTime(day) {
-        const response = await fetch('http://10.0.2.2:5000/api/reservation-checkTime', {
+        const response = await fetch(`http://${Config.ip}:${Config.port}/api/reservation-checkTime`, {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${auth.token}`,
@@ -48,7 +49,7 @@ class ReservationStore {
 
 
     async createReservation(reservation) {
-        const response = await fetch('http://10.0.2.2:5000/api/reservation', {
+        const response = await fetch(`http://${Config.ip}:${Config.port}/api/reservation`, {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${auth.token}`,
@@ -72,7 +73,7 @@ class ReservationStore {
     }
 
     async updateReservation(id, reservation) {
-        const response = await fetch(`http://10.0.2.2:5000/api/reservation/${id}`, {
+        const response = await fetch(`http://${Config.ip}:${Config.port}/api/reservation/${id}`, {
             method: "PUT",
             headers: {
                 Authorization: `Bearer ${auth.token}`,
@@ -103,15 +104,14 @@ class ReservationStore {
 
 
     async deleteReservation(id) {
-        const requestOptions = {
+        await fetch(`http://${Config.ip}:${Config.port}/api/reservation/${id}`, {
             method: 'DELETE',
             headers: {
                 Authorization: `Bearer ${auth.token}`,
                 Accept: 'application/json',
                 'Content-Type': 'application/json;charset=utf-8'
             },
-        };
-        await fetch(`http://10.0.2.2:5000/api/reservation/${id}`, requestOptions)
+        })
         runInAction(() => {
             this.reservations = this.reservations.filter((item) => item.id !== id)
             this.reservations.sort((a, b) => (a.date + a.time > b.date + b.time) ? 1 : -1)

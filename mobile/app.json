@@ -1,11 +1,10 @@
 {
   "expo": {
     "name": "mobile",
-    "slug": "mobile",
+    "slug": "reservapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -18,10 +17,17 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.vovah.mobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e2e77cbb-9255-4e85-9b0a-ee619029ecea"
+      }
+    },
+    "owner": "vova-h"
   }
 }

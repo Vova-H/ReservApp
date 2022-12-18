@@ -16,7 +16,11 @@ const ReservationItem = observer(({item, showClient}) => {
 
     return (
         <>
-            <TouchableWithoutFeedback delayLongPress="1000" onLongPress={() => setIsClientInfo(!isClientInfo)}>
+            <TouchableWithoutFeedback delayLongPress="1000" onLongPress={() => {
+                if (authStore.isAdmin) {
+                    setIsClientInfo(!isClientInfo)
+                }
+            }}>
                 <Flex direction={"row"} items={"center"} style={styles.itemWrapper}>
                     <Flex justify={"center"}
                           style={styles.item}>
@@ -51,7 +55,7 @@ const ReservationItem = observer(({item, showClient}) => {
                 </Flex>
             </TouchableWithoutFeedback>
 
-            {isClientInfo && authStore.isAdmin ?
+            {isClientInfo && item ?
                 <InfoClientModal
                     isClientInfo={isClientInfo}
                     setIsClientInfo={setIsClientInfo}

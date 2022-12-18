@@ -1,6 +1,6 @@
 import {makeAutoObservable, runInAction} from "mobx";
 import {Alert} from "react-native";
-
+import Config from "../config";
 
 class AuthStore {
     token = ""
@@ -12,7 +12,7 @@ class AuthStore {
     }
 
     registration = async (user) => {
-        const response = await fetch('http://10.0.2.2:5000/api/registration', {
+        const response = await fetch(`http://${Config.ip}:${Config.port}/api/registration`, {
             method: "POST",
             headers: {
                 Accept: 'application/json',
@@ -24,7 +24,7 @@ class AuthStore {
     }
 
     login = async (user) => {
-        const response = await fetch('http://10.0.2.2:5000/api/login', {
+        const response = await fetch(`http://${Config.ip}:${Config.port}/api/login`, {
             method: "POST",
             headers: {
                 Accept: 'application/json',

@@ -1,5 +1,7 @@
 import {makeAutoObservable, runInAction} from "mobx";
 import auth from "./authStore";
+import Config from "../config";
+
 
 class AdminStore {
 
@@ -13,7 +15,7 @@ class AdminStore {
     }
 
     async getAllUsers() {
-        const response = await fetch('http://10.0.2.2:5000/api/admin-users', {
+        const response = await fetch(`http://${Config.ip}:${Config.port}/api/admin-users`, {
             headers: {
                 Authorization: `Bearer ${auth.token}`,
                 Accept: 'application/json',
@@ -29,7 +31,7 @@ class AdminStore {
 
 
     async getAllReservations() {
-        const response = await fetch('http://10.0.2.2:5000/api/admin-reservations', {
+        const response = await fetch(`http://${Config.ip}:${Config.port}/api/admin-reservations`, {
             headers: {
                 method: "GET",
                 Authorization: `Bearer ${auth.token}`,
@@ -45,7 +47,7 @@ class AdminStore {
     }
 
     async getWorkingTime() {
-        const response = await fetch('http://10.0.2.2:5000/api/admin-time', {
+        const response = await fetch(`http://${Config.ip}:${Config.port}/api/admin-time`, {
             headers: {
                 method: "GET",
                 Authorization: `Bearer ${auth.token}`,
@@ -63,7 +65,7 @@ class AdminStore {
     }
 
     async updateWorkingTime(newTime) {
-        const response = await fetch('http://10.0.2.2:5000/api/admin-time', {
+        const response = await fetch(`http://${Config.ip}:${Config.port}/api/admin-time`, {
             method: "PUT",
             headers: {
                 Authorization: `Bearer ${auth.token}`,

@@ -18,7 +18,6 @@ import reservationStore from "../storage/reservationStore";
 
 
 const LoginScreen = observer(({navigation}) => {
-
     const login = async (values) => {
         const response = await authStore.login(values)
         if (response[0]) {
