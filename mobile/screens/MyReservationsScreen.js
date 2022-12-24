@@ -43,12 +43,16 @@ const MyReservationsScreen = () => {
 
     return (
         <>
-            <Flex fill style={{justifyContent: "space-between"}}>
+            <Flex fill>
                 <Header title={"My Reservations"}/>
                 <Flex fill items={"center"} justify={"center"}>
                     {
                         reservationStore.reservations.length === 0 ?
-                            <Text style={{marginBottom: 20}}> You don't have any reservations </Text> :
+                            <Flex style={styles.emptyWrapper}>
+                                <Icon name="file-remove-outline" style={styles.iconEmpty}/>
+                                <Text style={styles.titleEmpty}>You don't have any reservation yet</Text>
+                            </Flex>
+                            :
                             <FlatList data={reservationStore.reservations}
                                       renderItem={renderReservations}
                                       keyExtractor={
@@ -85,6 +89,17 @@ const styles = StyleSheet.create({
     },
     iconCreate: {
         fontSize: 40
+    },
+    emptyWrapper: {
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    iconEmpty: {
+        fontSize: 200,
+        color: "rgba(120,120,120,0.38)"
+    },
+    titleEmpty: {
+        fontSize: 35,
     }
 })
 

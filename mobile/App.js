@@ -2,7 +2,6 @@ import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import RegisterScreen from "./screens/RegisterScreen";
 import LoginScreen from "./screens/LoginScreen";
-import 'localstorage-polyfill';
 import MyReservationsScreen from "./screens/MyReservationsScreen";
 import {IconComponentProvider} from "@react-native-material/core";
 import CreatingScreen from "./screens/CreatingReservationScreen";
@@ -14,7 +13,7 @@ import AdminScreen from "./screens/AdminScreen";
 export default function App() {
 
     const Stack = createNativeStackNavigator();
-
+    
     return (
             <IconComponentProvider IconComponent={MaterialCommunityIcons}>
                 <NavigationContainer>
