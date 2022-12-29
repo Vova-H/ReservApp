@@ -17,14 +17,7 @@ const MyReservationsScreen = () => {
             return await reservationStore.getReservations()
         } catch (e) {
             navigation.navigate('Login')
-            switch (e.response.status) {
-                case 404 :
-                    Alert.alert("Error 404", 'Page not found')
-                    break;
-                case 403:
-                    alert("Error 403", 'Access forbidden')
-                    break
-            }
+            Alert.alert("Error", e)
         }
     }
 

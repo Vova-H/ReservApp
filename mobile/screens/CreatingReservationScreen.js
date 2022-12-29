@@ -29,7 +29,7 @@ const CreatingReservationScreen = () => {
                         {
                             date: moment().format('YYYY-MM-DD'),
                             time: timeCreatingHandler,
-                            action: "to open sick list"
+                            action: "To open sick list"
                         }
                     }
                     validationSchema={reservationsValidationSchema}
