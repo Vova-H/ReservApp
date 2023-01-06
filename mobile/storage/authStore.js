@@ -40,7 +40,7 @@ class AuthStore {
             runInAction(() => {
                 this.token = token
                 this.client = data[1]
-                this.isAdmin = data[1].roles.includes("ADMIN")
+                this.isAdmin = data[1].role.includes("ADMIN")
             })
         }
         return await data

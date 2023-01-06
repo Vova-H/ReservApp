@@ -3,7 +3,8 @@ import {Flex, Icon, IconButton} from "@react-native-material/core";
 import {Modal, StyleSheet, Text} from "react-native";
 
 const InfoClientModal = ({isClientInfo, setIsClientInfo, item}) => {
-
+    let gender;
+    item.genderId === 1 ? gender = "Female" : gender = "Male"
     return (
         <Modal transparent={true} animationType={"slide"} visible={isClientInfo}>
             <Flex style={styles.modalContainer}>
@@ -25,6 +26,10 @@ const InfoClientModal = ({isClientInfo, setIsClientInfo, item}) => {
                         <Flex style={styles.clientInfoItemsWrapper}>
                             <Text style={styles.clientInfoItemLabel}>Surname: </Text>
                             <Text style={styles.clientInfoItem}>{item.user.surname}</Text>
+                        </Flex>
+                        <Flex style={styles.clientInfoItemsWrapper}>
+                            <Text style={styles.clientInfoItemLabel}>Gender: </Text>
+                            <Text style={styles.clientInfoItem}>{gender}</Text>
                         </Flex>
                         <Flex style={styles.clientInfoItemsWrapper}>
                             <Text style={styles.clientInfoItemLabel}>Email: </Text>

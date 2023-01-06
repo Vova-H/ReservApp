@@ -1,29 +1,32 @@
-import {Reservation, Time, User} from "../models/models.js";
+import {Reservation, Role, Status, Time, User} from "../models/models.js";
 import handlerDataTime from "../handlers/handlerDataTime.js";
 import handlerCheckActivity from "../handlers/handlerCheckActivity.js";
 import handlerShowTimes from "../handlers/handlerShowTimes.js";
 import handlerConvertTime from "../handlers/handlerConvertTime.js";
+import {raw} from "express";
 
 
 export default class ReservationService {
     async index(id) {
         const reservations = await Reservation.findAll({
-            include: {model: User, required: true},
+            include: [{model: User}, {model: Status, attributes: ["isValidStatus"]}],
             where: {userId: id},
             order: [
                 ["date", "ASC"],
                 ["time", "ASC"]
             ]
         })
-        reservations.map(el => {
-            el.isValidStatus = handlerCheckActivity(el)
-            el.save()
+        reservations.map(async el => {
+            el.status.isValidStatus = handlerCheckActivity(el)
+            let isValidStatusDB = await Status.findOne({where: {isValidStatus: el.status.isValidStatus}})
+            el.statusId = await isValidStatusDB.id
+            await el.save()
         })
         return reservations
     }
 
     async create(id, date, time, action) {
-        const user = await User.findOne({where: {id: id}})
+        const userDB = await User.findOne({where: {id: id}})
         const result = await handlerDataTime(date, time, id)
         if (result.length !== 0) {
             return {'errors': result}
@@ -33,9 +36,9 @@ export default class ReservationService {
             date,
             time,
             action,
-            isValidStatus: true,
             userId: id,
-            client: [user.name, user.surname]
+            statusId: 1,
+            client: [userDB.name, userDB.surname],
         })
         await reservation.save()
         return reservation
@@ -68,7 +71,6 @@ export default class ReservationService {
             busyTimes.map((busyTime) => {
                 if (time === busyTime) {
                     checkedTime[index].isFree = false
-
                 }
             })
         })
@@ -76,10 +78,12 @@ export default class ReservationService {
     }
 
 
-    async update(reqBody, id, idParam, roles) {
+    async update(reqBody, id, idParam, role) {
         const err = []
         let reservation
-        if (roles.includes("ADMIN")) {
+        const roleDB = await Role.findOne({where: {id: role.id}})
+
+        if (roleDB.nameOfRole.includes("ADMIN")) {
             reservation = await Reservation.findOne({
                 where: {
                     id: idParam
@@ -94,11 +98,13 @@ export default class ReservationService {
             })
         }
 
-        if (reservation === null) {
+        const statusDB = await Status.findOne({where: {id: reservation.statusId}})
+
+        if (!reservation) {
             err.push({"message": "Record not found"})
         }
 
-        if (reservation.isValidStatus === false) {
+        if (statusDB.isValidStatus === false) {
             err.push({"message": "You can't update date or time invalid reservation"})
         }
 
@@ -111,7 +117,7 @@ export default class ReservationService {
         if (result.length !== 0) {
             return {'errors': result}
         }
-        if (roles.includes("ADMIN")) {
+        if (roleDB.nameOfRole.includes("ADMIN")) {
             await Reservation.update({date: reqBody.date, time: reqBody.time, action: reqBody.action}, {
                 where: {
                     id: idParam,
@@ -128,8 +134,9 @@ export default class ReservationService {
         return [{"message": "Your entry has been updated"}, reqBody]
     }
 
-    async delete(id, idParam, roles) {
-        if (roles.includes("ADMIN")) {
+    async delete(id, idParam, role) {
+        const roleDB = await Role.findOne({where: {id: role.id}})
+        if (roleDB.nameOfRole.includes("ADMIN")) {
             await Reservation.destroy({where: {id: idParam}})
         } else {
             await Reservation.destroy({where: {id: idParam, userId: id}})

@@ -37,6 +37,7 @@ const TimeProperties = (props) => {
                     <DateTimePickerModal
                         isVisible={isEndOfDayTimePickerVisible}
                         mode="time"
+                        is24Hour={false}
                         minuteInterval={30}
                         onConfirm={handleEndOfDayConfirm}
                         onCancel={hideEndOfDayPicker}

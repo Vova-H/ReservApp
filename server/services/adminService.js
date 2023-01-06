@@ -1,15 +1,25 @@
-import {Reservation, Time, User} from "../models/models.js";
+import {Gender, Reservation, Status, Time, User} from "../models/models.js";
 import handlerCheckActivity from "../handlers/handlerCheckActivity.js";
 import handlerValidTime from "../handlers/handlerValidTime.js";
+import db from "../db.js";
 
 export default class AdminService {
     async getAllUsers() {
-        return await User.findAll()
+        return await User.findAll({
+            include: {model: Gender, attributes: ["nameOfGender"]},
+            order: [
+                ["createdAt", "ASC"],
+            ]
+        })
     }
 
     async getAllReservations() {
         const reservations = await Reservation.findAll({
-            include: {model: User, required: true},
+            include: [
+                {model: User},
+                {
+                    model: Status, attributes: ["isValidStatus"]
+                }],
             order: [
                 ["date", "ASC"],
                 ["time", "ASC"]
@@ -19,6 +29,7 @@ export default class AdminService {
             el.isValidStatus = handlerCheckActivity(el)
             el.save()
         })
+
         return reservations
     }
 

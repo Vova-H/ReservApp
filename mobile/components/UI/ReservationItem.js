@@ -11,9 +11,8 @@ import InfoClientModal from "../modalComponents/InfoClientModal";
 const ReservationItem = observer(({item, showClient}) => {
     const navigation = useNavigation()
 
-    const {isValidStatus, action, date, time, client, id} = item
+    const {status, action, date, time, client, id} = item
     const [isClientInfo, setIsClientInfo] = useState(false)
-
     return (
         <>
             <TouchableWithoutFeedback delayLongPress="1000" onLongPress={() => {
@@ -26,7 +25,7 @@ const ReservationItem = observer(({item, showClient}) => {
                           style={styles.item}>
                         <Text style={styles.timeItem}>{time}</Text>
                         <Text style={styles.dateItem}>{date}</Text>
-                        {isValidStatus === false &&
+                        {status.isValidStatus === false &&
                             <Text style={styles.statusItem}>Not Active</Text>
                         }
                     </Flex>
@@ -37,7 +36,7 @@ const ReservationItem = observer(({item, showClient}) => {
                     </Flex>
                     <Flex direction={"row"} justify={"space-around"}>
                         {
-                            isValidStatus && <Flex diraction={"row"} style={styles.editIconWrapper}>
+                            status.isValidStatus && <Flex diraction={"row"} style={styles.editIconWrapper}>
                                 <IconButton
                                     onPress={() => {
                                         reservationStore.editReservationItem = item

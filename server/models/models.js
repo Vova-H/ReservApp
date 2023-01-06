@@ -8,7 +8,6 @@ export const User = sequelize.define('user', {
     phone: {type: DataTypes.STRING, require: true},
     email: {type: DataTypes.STRING, unique: true},
     password: {type: DataTypes.STRING, require: true},
-    roles: {type: DataTypes.ARRAY(DataTypes.STRING), require: true}
 })
 
 export const Reservation = sequelize.define('reservation', {
@@ -17,7 +16,6 @@ export const Reservation = sequelize.define('reservation', {
     client: {type: DataTypes.ARRAY(DataTypes.STRING), require: true},
     date: {type: DataTypes.DATEONLY, require: true},
     time: {type: DataTypes.STRING, require: true},
-    isValidStatus: {type: DataTypes.BOOLEAN}
 })
 
 export const Time = sequelize.define('time', {
@@ -25,8 +23,30 @@ export const Time = sequelize.define('time', {
     startOfDay: {type: DataTypes.STRING, require: true},
     endOfDay: {type: DataTypes.STRING, require: true}
 })
+export const Role = sequelize.define('role', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    nameOfRole: {type: DataTypes.BOOLEAN, require: true}
+})
 
-User.hasMany(Reservation)
+export const Gender = sequelize.define('gender', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    nameOfGender: {type: DataTypes.STRING, require: true}
+})
+
+export const Status = sequelize.define('status', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    isValidStatus: {type: DataTypes.BOOLEAN, require: true}
+})
+
+
+User.hasMany(Reservation, {foreignKey: "userId"})
 Reservation.belongsTo(User)
 
+Role.hasMany(User, {foreignKey: "roleId"})
+User.belongsTo(Role)
 
+Gender.hasMany(User, {foreignKey: "genderId"})
+User.belongsTo(Gender)
+
+Status.hasMany(Reservation, {foreignKey: "statusId"})
+Reservation.belongsTo(Status)

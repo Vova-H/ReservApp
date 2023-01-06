@@ -23,9 +23,9 @@ const screenStyle = StyleSheet.create({
     input: {
         backgroundColor: "rgba(255,255,255,0.6)",
         width: "100%",
+        alignSelf:"center",
         borderWidth: 1,
         padding: 5,
-        textAlign: "center",
         fontSize: 20,
     },
     textError: {

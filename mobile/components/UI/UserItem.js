@@ -5,8 +5,7 @@ import {observer} from "mobx-react";
 import moment from "moment/moment";
 
 const UserItem = ({item}) => {
-
-    const {name, surname, phone, email, createdAt} = item
+    const {name, surname, phone, gender, email, createdAt} = item
 
     return (
         <Flex style={styles.userWrapper}>
@@ -14,6 +13,12 @@ const UserItem = ({item}) => {
                 <Text style={styles.itemLabel}>Client: </Text>
                 <Text style={styles.item}>{name} {surname}</Text>
             </Flex>
+
+            <Flex style={styles.itemWrapper}>
+                <Text style={styles.itemLabel}>Gender: </Text>
+                <Text style={styles.item}>{gender.nameOfGender}</Text>
+            </Flex>
+
             <Flex style={styles.itemWrapper}>
                 <Text style={styles.itemLabel}>Email: </Text>
                 <Text style={styles.item}>{email}</Text>

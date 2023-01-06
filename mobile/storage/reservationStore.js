@@ -59,6 +59,7 @@ class ReservationStore {
             body: JSON.stringify(reservation)
         })
         const data = await response.json()
+        data['status'] = {"isValidStatus": true}
         if (!data.errors) {
             runInAction(() => {
                 this.reservations = [...this.reservations, data]
