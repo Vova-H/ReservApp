@@ -17,6 +17,8 @@ import {Button} from "@react-native-material/core";
 import authStore from "../storage/authStore";
 import {observer} from "mobx-react";
 import {RadioGroup} from "react-native-btr";
+import moment from "moment";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const RegisterScreen = (({navigation}) => {
 
@@ -25,10 +27,9 @@ const RegisterScreen = (({navigation}) => {
             id: "1",
             label: "Female",
             value: "Female",
-            selected: true,
             labelStyle: {
                 fontSize: 25,
-                fontWeight: "600"
+                fontWeight: "700"
             }
         },
         {
@@ -37,11 +38,24 @@ const RegisterScreen = (({navigation}) => {
             value: "Male",
             labelStyle: {
                 fontSize: 25,
-                fontWeight: "600"
+                fontWeight: "700"
             }
         },
     ]);
 
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [dayOfBirthday, setDayOfBirthday] = useState(moment().format('YYYY-MM-DD'))
+
+    const showDatePicker = () => {
+        setDatePickerVisibility(true);
+    };
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
+    };
+    const handleDateConfirm = date => {
+        setDayOfBirthday(moment(date).format('YYYY-MM-DD'))
+        hideDatePicker();
+    };
     return (
         <View style={styles.container}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -59,10 +73,11 @@ const RegisterScreen = (({navigation}) => {
                                     email: '',
                                     password: '',
                                     phone: '',
-                                    gender: "Female"
+                                    gender: "",
                                 }}
                                 validationSchema={registrationValidationSchema}
                                 onSubmit={async (values, actions) => {
+                                    values["birthday"] = dayOfBirthday
                                     const res = await authStore.registration(values)
                                     Alert.alert("Registration", res.message)
                                     actions.resetForm()
@@ -115,9 +130,11 @@ const RegisterScreen = (({navigation}) => {
                                                        onBlur={props.handleBlur('email')}
 
                                             ></TextInput>
-
                                             <Text
-                                                style={styles.textError}>{props.touched.email && props.errors.email}</Text>
+                                                style={styles.textError}>{props.touched.email && props.errors.email}
+                                            </Text>
+
+
                                             <Text style={styles.label}>Password</Text>
                                             <TextInput style={styles.input}
                                                        value={props.values.password}
@@ -141,7 +158,33 @@ const RegisterScreen = (({navigation}) => {
                                                     layout="row"
                                                 />
                                             </View>
+                                            <Text
+                                                style={styles.textError}>{props.touched.gender && props.errors.gender}
+                                            </Text>
 
+
+                                            <Text style={[styles.label, {marginBottom: "5%"}]}>
+                                                Date Of Birthday
+                                            </Text>
+                                            <View style={{
+                                                alignItems: "center",
+                                                marginBottom: "10%",
+                                                borderWidth: 1,
+                                                backgroundColor: "rgba(255,255,255,0.6)",
+                                            }}>
+                                                <Text style={[styles.label, {fontWeight: "800"}]}
+                                                      onPress={() => showDatePicker()}
+                                                >
+                                                    {dayOfBirthday}
+                                                </Text>
+                                                <DateTimePickerModal
+                                                    isVisible={isDatePickerVisible}
+                                                    mode="date"
+                                                    onConfirm={handleDateConfirm}
+                                                    onCancel={hideDatePicker}
+                                                    data={dayOfBirthday}
+                                                />
+                                            </View>
 
                                         </ScrollView>
 

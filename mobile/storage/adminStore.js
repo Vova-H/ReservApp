@@ -23,6 +23,9 @@ class AdminStore {
             }
         })
         const data = await response.json()
+        data.forEach(el => {
+            el["age"] = new Date().getFullYear() - new Date(el.birthday).getFullYear()
+        })
         await runInAction(() => {
             this.allUsers = [...this.allUsers, ...data]
         })

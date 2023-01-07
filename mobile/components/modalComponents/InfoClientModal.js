@@ -5,6 +5,9 @@ import {Modal, StyleSheet, Text} from "react-native";
 const InfoClientModal = ({isClientInfo, setIsClientInfo, item}) => {
     let gender;
     item.genderId === 1 ? gender = "Female" : gender = "Male"
+    const age = new Date().getFullYear() - new Date(item.user.birthday).getFullYear()
+
+
     return (
         <Modal transparent={true} animationType={"slide"} visible={isClientInfo}>
             <Flex style={styles.modalContainer}>
@@ -26,6 +29,14 @@ const InfoClientModal = ({isClientInfo, setIsClientInfo, item}) => {
                         <Flex style={styles.clientInfoItemsWrapper}>
                             <Text style={styles.clientInfoItemLabel}>Surname: </Text>
                             <Text style={styles.clientInfoItem}>{item.user.surname}</Text>
+                        </Flex>
+                        <Flex style={styles.clientInfoItemsWrapper}>
+                            <Text style={styles.clientInfoItemLabel}>Birthday: </Text>
+                            <Text style={styles.clientInfoItem}>{item.user.birthday}</Text>
+                        </Flex>
+                        <Flex style={styles.clientInfoItemsWrapper}>
+                            <Text style={styles.clientInfoItemLabel}>Age: </Text>
+                            <Text style={styles.clientInfoItem}>{age}</Text>
                         </Flex>
                         <Flex style={styles.clientInfoItemsWrapper}>
                             <Text style={styles.clientInfoItemLabel}>Gender: </Text>

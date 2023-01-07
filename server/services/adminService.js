@@ -1,7 +1,6 @@
 import {Gender, Reservation, Status, Time, User} from "../models/models.js";
 import handlerCheckActivity from "../handlers/handlerCheckActivity.js";
 import handlerValidTime from "../handlers/handlerValidTime.js";
-import db from "../db.js";
 
 export default class AdminService {
     async getAllUsers() {

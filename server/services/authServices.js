@@ -3,23 +3,25 @@ import bcrypt from "bcrypt";
 import generateAccessToken from "../handlers/handlerGenerateAccessToken.js";
 
 export default class AuthServices {
-    async registration(name, surname, phone, email, password, gender) {
+    async registration(name, surname, phone, email, password, gender, birthday) {
         const candidate = await User.findOne({where: {email: email}})
         if (candidate) {
             return {"message": "User with this email already exists"}
         }
         const genderDB = await Gender.findOne({where: {nameOfGender: gender}})
         const hashPassword = await bcrypt.hashSync(password, 7)
-        const user = await User.create({
+        const userDB = await User.create({
             name,
             surname,
             phone,
             email,
+            birthday,
             password: hashPassword,
             roleId: 1,
-            genderId: genderDB.dataValues.id
+            genderId: genderDB.dataValues.id,
         })
-        await user.save()
+        await userDB.save()
+
         return {"message": "The user has been successfully registered"}
     }
 

@@ -15,8 +15,8 @@ class AuthController {
         if (!errors.isEmpty()) {
             return {"message": "Registration error", errors}
         }
-        const {name, surname, phone, email, password, gender} = req.body
-        return this.authService.registration(name, surname, phone, email, password, gender)
+        const {name, surname, phone, email, password, gender, birthday} = req.body
+        return this.authService.registration(name, surname, phone, email, password, gender, birthday)
 
     }
 

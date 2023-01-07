@@ -5,6 +5,7 @@ export const User = sequelize.define('user', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     name: {type: DataTypes.STRING, require: true},
     surname: {type: DataTypes.STRING, require: true},
+    birthday: {type: DataTypes.DATEONLY, require: true},
     phone: {type: DataTypes.STRING, require: true},
     email: {type: DataTypes.STRING, unique: true},
     password: {type: DataTypes.STRING, require: true},
@@ -38,7 +39,6 @@ export const Status = sequelize.define('status', {
     isValidStatus: {type: DataTypes.BOOLEAN, require: true}
 })
 
-
 User.hasMany(Reservation, {foreignKey: "userId"})
 Reservation.belongsTo(User)
 
@@ -50,3 +50,4 @@ User.belongsTo(Gender)
 
 Status.hasMany(Reservation, {foreignKey: "statusId"})
 Reservation.belongsTo(Status)
+
