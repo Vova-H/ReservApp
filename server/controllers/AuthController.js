@@ -21,6 +21,10 @@ class AuthController {
     }
 
     async login(req) {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return {errors}
+        }
         const {email, password} = req.body
         return this.authService.login(email, password)
     }

@@ -10,10 +10,14 @@ authRouter.post('/registration', [
     check('surname', "Last name cannot be empty").notEmpty({ignore_whitespace: true}),
     check('phone', "invalid phone number").notEmpty({ignore_whitespace: true}),
     check('password', "Password cannot be an empty string").notEmpty({ignore_whitespace: true}),
-    check('password', "Password must be at least 4 characters").isLength({min: 4, max: 15}),
+    check('password', "Password must be at least 4 characters").isLength({min: 8, max: 15}),
     check('email', "Invalid email entered").isEmail()
 ], TryCatchMiddleware(AuthController.registration.bind(AuthController)))
-authRouter.post('/login', TryCatchMiddleware(AuthController.login.bind(AuthController)))
+authRouter.post('/login',[
+    check('password', "Password cannot be an empty string").notEmpty({ignore_whitespace: true}),
+    check('password', "Password must be at least 4 characters").isLength({min: 8, max: 15}),
+    check('email', "Invalid email entered").isEmail()
+], TryCatchMiddleware(AuthController.login.bind(AuthController)))
 authRouter.get('/logout', TryCatchMiddleware(AuthController.logout.bind(AuthController)))
 
 export default authRouter;

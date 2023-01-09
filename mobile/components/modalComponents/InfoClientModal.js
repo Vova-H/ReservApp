@@ -4,7 +4,8 @@ import {Modal, StyleSheet, Text} from "react-native";
 
 const InfoClientModal = ({isClientInfo, setIsClientInfo, item}) => {
     let gender;
-    item.genderId === 1 ? gender = "Female" : gender = "Male"
+    item.user.genderId === 1 ? gender = "Female" : gender = "Male"
+
     const age = new Date().getFullYear() - new Date(item.user.birthday).getFullYear()
 
 

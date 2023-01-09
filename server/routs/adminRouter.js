@@ -3,6 +3,7 @@ import roleMiddleware from "../middleware/roleMiddleware.js";
 import AdminController from "../controllers/AdminController.js";
 import AuthMiddleware from "../middleware/authMiddleware.js";
 import tryCatchMiddleware from "../middleware/tryCatchMiddleware.js";
+import {check} from "express-validator";
 
 const adminRouter = new Router()
 
@@ -18,7 +19,10 @@ adminRouter.get('/admin-time',
     AuthMiddleware,
     roleMiddleware(["ADMIN"]),
     tryCatchMiddleware(AdminController.getWorkingTime.bind(AdminController)))
-adminRouter.put('/admin-time',
+adminRouter.put('/admin-time', [
+        check('startOfDay', "Start of day  is require").notEmpty({ignore_whitespace: true}),
+        check('endOfDay', "End of day is require").notEmpty({ignore_whitespace: true}),
+    ],
     AuthMiddleware,
     roleMiddleware(["ADMIN"]),
     tryCatchMiddleware(AdminController.changeWorkingTime.bind(AdminController)))

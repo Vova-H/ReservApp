@@ -1,4 +1,5 @@
 import AdminService from "../services/adminService.js";
+import {validationResult} from "express-validator";
 
 
 class AdminController {
@@ -21,6 +22,11 @@ class AdminController {
     }
 
     async changeWorkingTime(req) {
+        const errors = validationResult(req)
+
+        if (!errors.isEmpty()) {
+            return errors
+        }
         const {startOfDay, endOfDay} = req.body
         return this.adminService.changeWorkingTime(startOfDay, endOfDay)
     }
